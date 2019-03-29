@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Mocks">
+      <UniqueIdentifier>{1d0eeb2c-9964-455f-baaf-b4e98864a70b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CoAPEndpointMock.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="CoAPServerMock.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="EndpointMock.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusTest.h" />
+    <ClInclude Include="ServerTest.h" />
+    <ClInclude Include="PacketTest.h" />
+    <ClInclude Include="OptionsTest.h" />
+    <ClInclude Include="ObserverTest.h" />
+    <ClInclude Include="EndpointTest.h" />
+    <ClInclude Include="PacketProviderMock.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
+    <ClCompile Include="StatusTest.cpp" />
+    <ClCompile Include="ServerTest.cpp" />
+    <ClCompile Include="PacketTest.cpp" />
+    <ClCompile Include="OptionsTest.cpp" />
+    <ClCompile Include="ObserverTest.cpp" />
+    <ClCompile Include="EndpointTest.cpp" />
+  </ItemGroup>
+</Project>
