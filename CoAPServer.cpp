@@ -62,26 +62,26 @@ namespace Thing {
 
 		void Server::Start()
 		{
-			if (udpProvider)
-				udpProvider->Start(port);
+			if (packetProvider)
+				packetProvider->Start(port);
 		}
 
 		void Server::Stop()
 		{
-			if (udpProvider)
-				udpProvider->Stop();
+			if (packetProvider)
+				packetProvider->Stop();
 		}
 
 		void Server::Process()
 		{
-			if (!udpProvider)
+			if (!packetProvider)
 				return;
-			uint8_t* buffer;
-			int packetLength;
+			uint8_t* buffer = NULL;
+			int packetLength = 0;
 
 			IPAddress address;
 			int port = 0;
-			if (udpProvider->ReadPacket(&buffer, &packetLength, &address, &port))
+			if (packetProvider->ReadPacket(&buffer, &packetLength, &address, &port))
 			{
 				Thing::CoAP::Request request;
 				request.DesserializePacket(buffer, packetLength);
@@ -217,13 +217,13 @@ namespace Thing {
 					uint8_t* payload = NULL;
 					int payloadLength = 0;
 					response.SerializePacket(&payload, &payloadLength);
-					udpProvider->SendPacket(payload, payloadLength, address, port);
+					packetProvider->SendPacket(payload, payloadLength, address, port);
 					delete[] payload;
 				}
 				default:
 					break;
 				}
-				udpProvider->DestroyPacket(buffer);
+				packetProvider->DestroyPacket(buffer);
 			}
 		}
 
@@ -256,7 +256,7 @@ namespace Thing {
 				int payloadLength = 0;
 				response.SerializePacket(&payload, &payloadLength);
 
-				udpProvider->SendPacket(payload, payloadLength, obs.GetIPAddress(), obs.GetPort());
+				packetProvider->SendPacket(payload, payloadLength, obs.GetIPAddress(), obs.GetPort());
 				delete[] payload;
 			}
 		}
@@ -268,7 +268,7 @@ namespace Thing {
 
 		void Server::SetPacketProvider(IPacketProvider * provider)
 		{
-			this->udpProvider = provider;
+			this->packetProvider = provider;
 		}
 
 		void Server::SetPacketProvider(IPacketProvider & provider)

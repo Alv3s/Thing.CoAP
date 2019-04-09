@@ -35,7 +35,7 @@ namespace Thing {
 			void SetPacketProvider(IPacketProvider* provider);
 			void SetPacketProvider(IPacketProvider& provider);
 		private:
-			IPacketProvider* udpProvider;
+			IPacketProvider* packetProvider;
 			int port;
 			std::map<std::string, Thing::CoAP::IEndpoint*> endpoints;
 			std::map<std::string, std::list<Thing::CoAP::Observer> > observers;
