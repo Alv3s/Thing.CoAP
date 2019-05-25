@@ -31,6 +31,7 @@
     <ClInclude Include="CoAPFunctions.h" />
     <ClInclude Include="CoAPServer.h" />
     <ClInclude Include="ContentFormat.h" />
+    <ClInclude Include="FunctionalEndpoint.h" />
     <ClInclude Include="IMessageManager.h" />
     <ClInclude Include="IPacketProvider.h" />
     <ClInclude Include="MessageManager.h" />
@@ -50,6 +51,7 @@
   <ItemGroup>
     <ClCompile Include="CoAPEndpoint.cpp" />
     <ClCompile Include="CoAPServer.cpp" />
+    <ClCompile Include="FunctionalEndpoint.cpp" />
     <ClCompile Include="MessageManager.cpp" />
     <ClCompile Include="Status.cpp" />
     <ClCompile Include="Observer.cpp" />

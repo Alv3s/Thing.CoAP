@@ -1,13 +1,15 @@
 #pragma once
 
 #include <string>
-#include "IEndpoint.h"
 #include "Status.h"
+#include "IEndpoint.h"
 
 namespace Thing {
 	namespace CoAP
 	{
 		typedef uint32_t IPAddress;
+
+		class FunctionalEndpoint;
 
 		class IServer
 		{
@@ -15,6 +17,7 @@ namespace Thing {
 			virtual void SetPort(int port) = 0;
 			virtual int GetPort() = 0;
 
+			virtual Thing::CoAP::FunctionalEndpoint& CreateEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool IsObservable) = 0;
 			virtual void AddEndpoint(Thing::CoAP::IEndpoint* endpoint) = 0;
 			virtual void AddEndpoint(Thing::CoAP::IEndpoint& endpoint) = 0;
 

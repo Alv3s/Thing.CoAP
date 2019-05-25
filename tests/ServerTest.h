@@ -14,7 +14,9 @@ namespace Thing {
 				void SetUp() override;
 				void TearDown() override;
 
+				void BaseEndpointTest(Thing::CoAP::Method method, Thing::CoAP::IEndpoint& endpoint);
 				void SimpleEndpointTest(Thing::CoAP::Method method);
+				void FunctionalEndpointTest(Thing::CoAP::Method method);
 				void EndpointNotFoundTest(Thing::CoAP::Method method);
 				void MultipleEndpointTest(CoAPEndpointMock* endpointMocks, int size, int callIndex, Thing::CoAP::Method method);
 				void ResourceDiscoveryTest(uint8_t** buffer, int* length);

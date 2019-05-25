@@ -91,25 +91,17 @@ namespace Thing {
 			}
 
 #pragma region Simple Endpoint Tests
-			void ServerTest::SimpleEndpointTest(Thing::CoAP::Method method)
+			void ServerTest::BaseEndpointTest(Thing::CoAP::Method method, Thing::CoAP::IEndpoint& endpoint)
 			{
-				const std::string endpointPath = "Endpoint";
+				const std::string endpointPath = endpoint.GetEndpoint();
 				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
 				const uint16_t messageID = 0x1234;
 				const Thing::CoAP::IPAddress requestIPAddress = 0x01010101;
 				const int requestPort = 1234;
 				const uint8_t version = 1;
-				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				const Thing::CoAP::ContentFormat contentFormat = endpoint.GetContentFormat();
 				const Thing::CoAP::MessageType messageType = Thing::CoAP::MessageType::NonConfirmable;
-
-				CoAPEndpointMock endpoint;
-				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
-				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
-				EXPECT_CALL(endpoint, Get(_)).Times(method == Thing::CoAP::Method::Get ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
-				EXPECT_CALL(endpoint, Post(_)).Times(method == Thing::CoAP::Method::Post ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
-				EXPECT_CALL(endpoint, Put(_)).Times(method == Thing::CoAP::Method::Put ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
-				EXPECT_CALL(endpoint, Delete(_)).Times(method == Thing::CoAP::Method::Delete ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
-
+				
 				Thing::CoAP::Packet request;
 				request.SetVersion(version);
 				request.SetTokens(std::vector<uint8_t>(tokens, tokens + sizeof(tokens)));
@@ -123,7 +115,6 @@ namespace Thing {
 				request.SetOptions(options);
 				request.SetCode(method);
 
-				Server.AddEndpoint(endpoint);
 				Server.Start();
 
 				uint8_t* requestBuffer;
@@ -160,6 +151,47 @@ namespace Thing {
 				delete[] requestBuffer;
 			}
 
+			void ServerTest::SimpleEndpointTest(Thing::CoAP::Method method)
+			{
+				CoAPEndpointMock endpoint;
+				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return("Endpoint"));
+				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(Thing::CoAP::ContentFormat::ApplicationJSon));
+				EXPECT_CALL(endpoint, Get(_)).Times(method == Thing::CoAP::Method::Get ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
+				EXPECT_CALL(endpoint, Post(_)).Times(method == Thing::CoAP::Method::Post ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
+				EXPECT_CALL(endpoint, Put(_)).Times(method == Thing::CoAP::Method::Put ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
+				EXPECT_CALL(endpoint, Delete(_)).Times(method == Thing::CoAP::Method::Delete ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
+				
+				Server.AddEndpoint(endpoint);
+				BaseEndpointTest(method, endpoint);
+			}
+
+			void ServerTest::FunctionalEndpointTest(Thing::CoAP::Method method)
+			{
+				testing::MockFunction<Thing::CoAP::Status(Thing::CoAP::Request&)> getFunctionMock;
+				testing::MockFunction<Thing::CoAP::Status(Thing::CoAP::Request&)> postFunctionMock;
+				testing::MockFunction<Thing::CoAP::Status(Thing::CoAP::Request&)> putFunctionMock;
+				testing::MockFunction<Thing::CoAP::Status(Thing::CoAP::Request&)> deleteFunctionMock;
+
+				EXPECT_CALL(getFunctionMock, Call(_)).Times(method == Thing::CoAP::Method::Get ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
+				EXPECT_CALL(postFunctionMock, Call(_)).Times(method == Thing::CoAP::Method::Post ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
+				EXPECT_CALL(putFunctionMock, Call(_)).Times(method == Thing::CoAP::Method::Put ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
+				EXPECT_CALL(deleteFunctionMock, Call(_)).Times(method == Thing::CoAP::Method::Delete ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
+
+				Thing::CoAP::FunctionalEndpoint& endpoint = Server.CreateEndpoint("Endpoint", Thing::CoAP::ContentFormat::ApplicationJSon)
+				.OnGet([&getFunctionMock](Thing::CoAP::Request & request) {
+					return getFunctionMock.Call(request);
+				}).OnPost([&postFunctionMock](Thing::CoAP::Request& request) {
+					return postFunctionMock.Call(request);
+				}).OnPut([&putFunctionMock](Thing::CoAP::Request& request) {
+					return putFunctionMock.Call(request);
+				}).OnDelete([&deleteFunctionMock](Thing::CoAP::Request& request) {
+					return deleteFunctionMock.Call(request);
+				});
+
+				BaseEndpointTest(method, endpoint);
+			}
+
+
 			TEST_F(ServerTest, SimpleEndpointGetTesting)
 			{
 				SimpleEndpointTest(Thing::CoAP::Method::Get);
@@ -178,6 +210,26 @@ namespace Thing {
 			TEST_F(ServerTest, SimpleEndpointDeleteTesting)
 			{
 				SimpleEndpointTest(Thing::CoAP::Method::Delete);
+			}
+
+			TEST_F(ServerTest, FunctionalEndpointGetTesting)
+			{
+				FunctionalEndpointTest(Thing::CoAP::Method::Get);
+			}
+
+			TEST_F(ServerTest, FunctionalEndpointPostTesting)
+			{
+				FunctionalEndpointTest(Thing::CoAP::Method::Post);
+			}
+
+			TEST_F(ServerTest, FunctionalEndpointPutTesting)
+			{
+				FunctionalEndpointTest(Thing::CoAP::Method::Put);
+			}
+
+			TEST_F(ServerTest, FunctionalEndpointDeleteTesting)
+			{
+				FunctionalEndpointTest(Thing::CoAP::Method::Delete);
 			}
 #pragma endregion
 

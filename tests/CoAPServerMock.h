@@ -2,6 +2,7 @@
 
 #include "gmock/gmock.h"
 #include "../IServer.h"
+#include "../FunctionalEndpoint.h"
 
 namespace Thing {
 	namespace CoAP {
@@ -12,6 +13,7 @@ namespace Thing {
 				MOCK_METHOD1(SetPort, void(int port));
 				MOCK_METHOD0(GetPort, int());
 
+				MOCK_METHOD3(CreateEndpoint, FunctionalEndpoint& (std::string, Thing::CoAP::ContentFormat, bool));
 				MOCK_METHOD1(AddEndpoint, void(Thing::CoAP::IEndpoint* endpoint));
 				MOCK_METHOD1(AddEndpoint, void(Thing::CoAP::IEndpoint& endpoint));
 

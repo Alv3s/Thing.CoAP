@@ -73,6 +73,7 @@
     <ClInclude Include="IPacketProvider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FunctionalEndpoint.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Observer.cpp">
@@ -96,5 +97,6 @@
     <ClCompile Include="MessageManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FunctionalEndpoint.cpp" />
   </ItemGroup>
 </Project>

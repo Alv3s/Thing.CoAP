@@ -6,6 +6,7 @@
 #include <list>
 #include "Observer.h"
 #include "IPacketProvider.h"
+#include "FunctionalEndpoint.h"
 
 namespace Thing {
 	namespace CoAP
@@ -15,6 +16,8 @@ namespace Thing {
 		public:
 			Server();
 			virtual ~Server();
+
+			virtual FunctionalEndpoint& CreateEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool IsObservable = true) override;
 
 			virtual void AddEndpoint(Thing::CoAP::IEndpoint* endpoint) override;
 			virtual void AddEndpoint(Thing::CoAP::IEndpoint& endpoint) override;

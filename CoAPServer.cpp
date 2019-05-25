@@ -19,7 +19,8 @@ namespace Thing {
 			options.push_back(option);
 		}
 
-		Server::Server() : port(5683)
+		Server::Server() : port(5683),
+							packetProvider(NULL)
 		{
 		}
 
@@ -28,6 +29,13 @@ namespace Thing {
 		}
 
 #pragma region Endpoint Management
+		FunctionalEndpoint& Server::CreateEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool IsObservable)
+		{
+			FunctionalEndpoint* endpoint = new FunctionalEndpoint(name, content, IsObservable);
+			AddEndpoint(endpoint);
+			return *endpoint;
+		}
+
 		void Server::AddEndpoint(Thing::CoAP::IEndpoint* endpoint)
 		{
 			endpoints[endpoint->GetEndpoint()] = endpoint;
