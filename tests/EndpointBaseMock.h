@@ -1,12 +1,12 @@
 #pragma once
 
 #include "gmock/gmock.h"
-#include "../IEndpoint.h"
+#include "../Thing.CoAP/EndpointBase.h"
 
 namespace Thing {
 	namespace CoAP {
 		namespace Tests {
-			class CoAPEndpointMock : public virtual Thing::CoAP::IEndpoint
+			class EndpointBaseMock : public Thing::CoAP::EndpointBase
 			{
 			public:
 				MOCK_CONST_METHOD0(GetEndpoint, std::string());
@@ -17,10 +17,6 @@ namespace Thing {
 				MOCK_METHOD1(Post, Thing::CoAP::Status(Thing::CoAP::Request&));
 				MOCK_METHOD1(Put, Thing::CoAP::Status(Thing::CoAP::Request&));
 				MOCK_METHOD1(Delete, Thing::CoAP::Status(Thing::CoAP::Request&));
-
-				MOCK_METHOD1(SetServer, void(Thing::CoAP::IServer*));
-				MOCK_METHOD1(SetServer, void(Thing::CoAP::IServer&));
-				MOCK_METHOD1(ObservableChanged, void(Thing::CoAP::Status));
 			};
 		}
 	}

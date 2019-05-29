@@ -10,7 +10,7 @@ namespace Thing {
 
 		uint16_t Option::GetLenght()
 		{
-			return buffer.size();
+			return static_cast<uint16_t>(buffer.size());
 		}
 
 		uint8_t* Option::GetBuffer()

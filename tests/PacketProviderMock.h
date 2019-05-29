@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gmock/gmock.h"
-#include "../IPacketProvider.h"
+#include "../Thing.CoAP/IPacketProvider.h"
 
 namespace Thing {
 	namespace CoAP {

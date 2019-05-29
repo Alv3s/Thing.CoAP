@@ -37,7 +37,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EndpointTest.cpp" />
+    <ClCompile Include="EndpointBaseTest.cpp" />
     <ClCompile Include="ObserverTest.cpp" />
     <ClCompile Include="OptionsTest.cpp" />
     <ClCompile Include="PacketTest.cpp" />
@@ -45,10 +45,10 @@
     <ClCompile Include="StatusTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EndpointBaseMock.h" />
+    <ClInclude Include="EndpointBaseTest.h" />
     <ClInclude Include="EndpointMock.h" />
-    <ClInclude Include="EndpointTest.h" />
-    <ClInclude Include="CoAPEndpointMock.h" />
-    <ClInclude Include="CoAPServerMock.h" />
+    <ClInclude Include="ServerMock.h" />
     <ClInclude Include="ObserverTest.h" />
     <ClInclude Include="OptionsTest.h" />
     <ClInclude Include="PacketTest.h" />
@@ -152,7 +152,7 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-	<Error Condition="!Exists('$(SolutionDir)\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets'))" />
+    <Error Condition="!Exists('$(SolutionDir)\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets'))" />
     <Error Condition="!Exists('$(SolutionDir)\packages\gmock.1.7.0\build\native\gmock.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\gmock.1.7.0\build\native\gmock.targets'))" />
     <Error Condition="!Exists('$(SolutionDir)\packages\boost.1.67.0.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\boost.1.67.0.0\build\boost.targets'))" />
   </Target>

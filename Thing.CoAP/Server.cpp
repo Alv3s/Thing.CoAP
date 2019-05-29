@@ -1,8 +1,8 @@
-#include "CoAPServer.h"
+#include "Server.h"
 #include "ContentFormat.h"
 #include "OptionValue.h"
 #include <stdio.h>
-#include "CoAPFunctions.h"
+#include "Functions.h"
 
 namespace Thing {
 	namespace CoAP
@@ -169,7 +169,7 @@ namespace Thing {
 						AddContentFormat(response, endpoint->GetContentFormat());
 						std::string payload = e.GetPayload();
 						response.SetCode(static_cast<uint8_t>(e.GetCode()));
-						response.SetPayload((uint8_t*)payload.c_str(), payload.size());
+						response.SetPayload((uint8_t*)payload.c_str(), static_cast<int>(payload.size()));
 						break;
 					}
 					case Thing::CoAP::Method::Put:
@@ -185,7 +185,7 @@ namespace Thing {
 						AddContentFormat(response, endpoint->GetContentFormat());
 						std::string payload = e.GetPayload();
 						response.SetCode(static_cast<uint8_t>(e.GetCode()));
-						response.SetPayload((uint8_t*)payload.c_str(), payload.size());
+						response.SetPayload((uint8_t*)payload.c_str(), static_cast<int>(payload.size()));
 						break;
 					}
 					case Thing::CoAP::Method::Post:
@@ -201,7 +201,7 @@ namespace Thing {
 						AddContentFormat(response, endpoint->GetContentFormat());
 						std::string payload = e.GetPayload();
 						response.SetCode(static_cast<uint8_t>(e.GetCode()));
-						response.SetPayload((uint8_t*)payload.c_str(), payload.size());
+						response.SetPayload((uint8_t*)payload.c_str(), static_cast<int>(payload.size()));
 						break;
 					}
 					case Thing::CoAP::Method::Delete:
@@ -217,7 +217,7 @@ namespace Thing {
 						AddContentFormat(response, endpoint->GetContentFormat());
 						std::string payload = e.GetPayload();
 						response.SetCode(static_cast<uint8_t>(e.GetCode()));
-						response.SetPayload((uint8_t*)payload.c_str(), payload.size());
+						response.SetPayload((uint8_t*)payload.c_str(), static_cast<int>(payload.size()));
 						break;
 					}
 					}
@@ -245,11 +245,11 @@ namespace Thing {
 			response.SetType(Thing::CoAP::MessageType::Confirmable);
 			response.SetCode(static_cast<uint8_t>(Thing::CoAP::ResponseCode::Content));
 			std::string buffer = r.GetPayload();
-			response.SetPayload((uint8_t*)buffer.c_str(), buffer.size());
+			response.SetPayload((uint8_t*)buffer.c_str(), static_cast<int>(buffer.size()));
 
 			std::vector<Thing::CoAP::Option> options;
 			Thing::CoAP::Option option;
-			option.SetOption((uint8_t*)endpointPath.c_str(), endpointPath.size());
+			option.SetOption((uint8_t*)endpointPath.c_str(), static_cast<int>(endpointPath.size()));
 			option.SetNumber(Thing::CoAP::OptionValue::URIPath);
 			options.push_back(option);
 			response.SetOptions(options);
@@ -318,7 +318,7 @@ namespace Thing {
 			response->ClearOptions();
 			AddContentFormat(*response, Thing::CoAP::ContentFormat::ApplicationLinkFormat);
 			response->SetCode(Thing::CoAP::Method::Content);
-			response->SetPayload((uint8_t*)result.c_str(), result.size());
+			response->SetPayload((uint8_t*)result.c_str(), static_cast<int>(result.size()));
 		}
 
 		void Server::noEndpointDefinedResponse(Thing::CoAP::Response * response, IPAddress ip, int port)

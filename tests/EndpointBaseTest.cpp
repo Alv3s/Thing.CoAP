@@ -1,21 +1,21 @@
-#include "EndpointTest.h"
+#include "EndpointBaseTest.h"
 
 using ::testing::_;
 
 namespace Thing {
 	namespace CoAP {
 		namespace Tests {
-			void EndpointTest::SetUp()
+			void EndpointBaseTest::SetUp()
 			{
 
 			}
 
-			void EndpointTest::TearDown()
+			void EndpointBaseTest::TearDown()
 			{
 
 			}
 
-			TEST_F(EndpointTest, ObservableChangedViaReference)
+			TEST_F(EndpointBaseTest, ObservableChangedViaReference)
 			{
 				Thing::CoAP::IEndpoint& iEndpoint = endpoint;
 				iEndpoint.SetServer(server);
@@ -25,7 +25,7 @@ namespace Thing {
 				endpoint.ObservableChanged(status);
 			}
 
-			TEST_F(EndpointTest, ObservableChangedViaPointer)
+			TEST_F(EndpointBaseTest, ObservableChangedViaPointer)
 			{
 				Thing::CoAP::IEndpoint& iEndpoint = endpoint;
 				iEndpoint.SetServer(&server);
@@ -35,7 +35,7 @@ namespace Thing {
 				endpoint.ObservableChanged(status);
 			}
 
-			TEST_F(EndpointTest, ObservableChangedServerNull)
+			TEST_F(EndpointBaseTest, ObservableChangedServerNull)
 			{
 				Thing::CoAP::IEndpoint& iEndpoint = endpoint;
 				iEndpoint.SetServer(nullptr);

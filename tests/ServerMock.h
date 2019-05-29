@@ -1,13 +1,13 @@
 #pragma once
 
 #include "gmock/gmock.h"
-#include "../IServer.h"
-#include "../FunctionalEndpoint.h"
+#include "../Thing.CoAP/IServer.h"
+#include "../Thing.CoAP/FunctionalEndpoint.h"
 
 namespace Thing {
 	namespace CoAP {
 		namespace Tests {
-			class CoAPServerMock : public virtual Thing::CoAP::IServer
+			class ServerMock : public virtual Thing::CoAP::IServer
 			{
 			public:
 				MOCK_METHOD1(SetPort, void(int port));

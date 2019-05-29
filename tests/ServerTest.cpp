@@ -153,7 +153,7 @@ namespace Thing {
 
 			void ServerTest::SimpleEndpointTest(Thing::CoAP::Method method)
 			{
-				CoAPEndpointMock endpoint;
+				EndpointMock endpoint;
 				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return("Endpoint"));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(Thing::CoAP::ContentFormat::ApplicationJSon));
 				EXPECT_CALL(endpoint, Get(_)).Times(method == Thing::CoAP::Method::Get ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
@@ -314,7 +314,7 @@ namespace Thing {
 			}
 #pragma endregion
 
-			void ServerTest::MultipleEndpointTest(CoAPEndpointMock* endpoint, int size, int callIndex, Thing::CoAP::Method method)
+			void ServerTest::MultipleEndpointTest(EndpointMock* endpoint, int size, int callIndex, Thing::CoAP::Method method)
 			{
 				const std::string endpointPath = endpoint[callIndex].GetEndpoint();
 				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
@@ -383,7 +383,7 @@ namespace Thing {
 			TEST_F(ServerTest, MultipleEndpointTest)
 			{
 				const int totalEndpoints = 5;
-				CoAPEndpointMock endpoint[totalEndpoints];
+				EndpointMock endpoint[totalEndpoints];
 
 				const std::string endpointPath = "Endpoint";
 				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
@@ -475,7 +475,7 @@ namespace Thing {
 				const std::string endpointName = "Endpoint";
 				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
 				const bool isObservable = true;
-				CoAPEndpointMock endpoint;
+				EndpointMock endpoint;
 
 				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointName));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
@@ -511,7 +511,7 @@ namespace Thing {
 				const int totalEndpoints = 10;
 				const std::string endpointBaseName = "Endpoint";
 				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
-				CoAPEndpointMock endpoint[totalEndpoints];
+				EndpointMock endpoint[totalEndpoints];
 
 				for (int i = 0; i < totalEndpoints; ++i)
 				{
@@ -608,7 +608,7 @@ namespace Thing {
 				const std::string observePacketPayload = "Observe Test";
 				const int totalNotifications = 5;
 
-				CoAPEndpointMock endpoint;
+				EndpointMock endpoint;
 				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
@@ -662,7 +662,7 @@ namespace Thing {
 				const std::string observePacketPayload = "Observe Test";
 				const int totalNotifications = 5;
 
-				CoAPEndpointMock endpoint;
+				EndpointMock endpoint;
 				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
@@ -736,7 +736,7 @@ namespace Thing {
 				const int totalNotifications = 5;
 				const int totalEndpoints = 10;
 
-				CoAPEndpointMock endpoint[totalEndpoints];
+				EndpointMock endpoint[totalEndpoints];
 
 				for (int i = 0; i < totalEndpoints; ++i)
 				{
@@ -800,7 +800,7 @@ namespace Thing {
 				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
 				const std::string observePacketPayload = "Observe Test";
 
-				CoAPEndpointMock endpoint;
+				EndpointMock endpoint;
 				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
@@ -859,7 +859,7 @@ namespace Thing {
 				const std::string observePacketPayload = "Observe Test";
 				const int totalNotifications = 5;
 
-				CoAPEndpointMock endpoint;
+				EndpointMock endpoint;
 				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
@@ -939,7 +939,7 @@ namespace Thing {
 				const int totalNotifications = 5;
 				const int totalEndpoints = 10;
 
-				CoAPEndpointMock endpoint[totalEndpoints];
+				EndpointMock endpoint[totalEndpoints];
 
 				for (int i = 0; i < totalEndpoints; ++i)
 				{
@@ -1023,7 +1023,7 @@ namespace Thing {
 				const int totalNotifications = 5;
 				const int totalObservationRequestSent = 10;
 
-				CoAPEndpointMock endpoint;
+				EndpointMock endpoint;
 				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));

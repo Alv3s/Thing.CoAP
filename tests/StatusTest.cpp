@@ -1,5 +1,5 @@
 #include "StatusTest.h"
-#include "../Status.h"
+#include "../Thing.CoAP/Status.h"
 
 namespace Thing {
 	namespace CoAP {

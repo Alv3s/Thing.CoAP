@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CoAPEndpoint.h"
+#include "EndpointBase.h"
 #include <functional>
 
 namespace Thing 
@@ -9,7 +9,7 @@ namespace Thing
 	{
 		using EndpointCallback = std::function<Thing::CoAP::Status(Thing::CoAP::Request& request)>;
 
-		class FunctionalEndpoint : public Endpoint, public virtual IEndpoint
+		class FunctionalEndpoint : public EndpointBase, public virtual IEndpoint
 		{
 		public:
 			FunctionalEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool isObservable);

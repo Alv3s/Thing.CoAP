@@ -9,24 +9,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CoAPEndpointMock.h">
-      <Filter>Mocks</Filter>
-    </ClInclude>
-    <ClInclude Include="CoAPServerMock.h">
-      <Filter>Mocks</Filter>
-    </ClInclude>
-    <ClInclude Include="EndpointMock.h">
-      <Filter>Mocks</Filter>
-    </ClInclude>
     <ClInclude Include="StatusTest.h" />
     <ClInclude Include="ServerTest.h" />
     <ClInclude Include="PacketTest.h" />
     <ClInclude Include="OptionsTest.h" />
     <ClInclude Include="ObserverTest.h" />
-    <ClInclude Include="EndpointTest.h" />
     <ClInclude Include="PacketProviderMock.h">
       <Filter>Mocks</Filter>
     </ClInclude>
+    <ClInclude Include="ServerMock.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="EndpointBaseMock.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="EndpointMock.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="EndpointBaseTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StatusTest.cpp" />
@@ -34,8 +34,8 @@
     <ClCompile Include="PacketTest.cpp" />
     <ClCompile Include="OptionsTest.cpp" />
     <ClCompile Include="ObserverTest.cpp" />
-    <ClCompile Include="EndpointTest.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
+    <ClCompile Include="EndpointBaseTest.cpp" />
   </ItemGroup>
 </Project>

@@ -57,7 +57,7 @@ namespace Thing {
 				return false;
 
 			if ((p + 1 + len) > (*buf + buflen))
-				return -1;
+				return false;
 			*running_delta = delta + *running_delta;
 			option.SetNumber(*running_delta);
 			option.SetOption(p + 1, len);
@@ -103,7 +103,7 @@ namespace Thing {
 
 		int Packet::GetPayloadLength()
 		{
-			return payload.size();
+			return static_cast<int>(payload.size());
 		}
 
 		uint8_t* Packet::GetPayload()
@@ -175,7 +175,7 @@ namespace Thing {
 			*payload = nullptr;
 
 			std::vector<uint8_t>& tokens = GetTokens();
-			int size = Packet::GetHeaderSize() + tokens.size() + optionsSize();
+			int size = Packet::GetHeaderSize() + static_cast<int>(tokens.size()) + optionsSize();
 			if (GetPayloadLength() > 0)
 				size += 1 + GetPayloadLength();
 
@@ -262,7 +262,7 @@ namespace Thing {
 				SetOptions(options);
 
 				if (p + 1 < end && *p == 0xFF)
-					SetPayload(p + 1, end - (p + 1));
+					SetPayload(p + 1, static_cast<int>(end - (p + 1)));
 				else
 					SetPayload(NULL, 0);
 			}

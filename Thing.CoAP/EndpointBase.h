@@ -6,10 +6,10 @@
 namespace Thing {
 	namespace CoAP
 	{
-		class Endpoint : public virtual IEndpoint
+		class EndpointBase : public virtual IEndpoint
 		{
 		public:
-			Endpoint();
+			EndpointBase();
 
 			virtual std::string GetEndpoint() const = 0;
 			virtual Thing::CoAP::ContentFormat GetContentFormat() const = 0;

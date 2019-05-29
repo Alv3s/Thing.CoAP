@@ -27,43 +27,46 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CoAPEndpoint.h" />
-    <ClInclude Include="CoAPFunctions.h" />
-    <ClInclude Include="CoAPServer.h" />
-    <ClInclude Include="ContentFormat.h" />
-    <ClInclude Include="FunctionalEndpoint.h" />
-    <ClInclude Include="IMessageManager.h" />
-    <ClInclude Include="IPacketProvider.h" />
-    <ClInclude Include="MessageManager.h" />
-    <ClInclude Include="Status.h" />
-    <ClInclude Include="MessageType.h" />
-    <ClInclude Include="Method.h" />
-    <ClInclude Include="Option.h" />
-    <ClInclude Include="OptionValue.h" />
-    <ClInclude Include="Packet.h" />
-    <ClInclude Include="Request.h" />
-    <ClInclude Include="Response.h" />
-    <ClInclude Include="ResponseCode.h" />
-    <ClInclude Include="IEndpoint.h" />
-    <ClInclude Include="Observer.h" />
-    <ClInclude Include="IServer.h" />
+    <ClInclude Include="Thing.CoAP\ContentFormat.h" />
+    <ClInclude Include="Thing.CoAP\EndpointBase.h" />
+    <ClInclude Include="Thing.CoAP\FunctionalEndpoint.h" />
+    <ClInclude Include="Thing.CoAP\Functions.h" />
+    <ClInclude Include="Thing.CoAP\IEndpoint.h" />
+    <ClInclude Include="Thing.CoAP\IMessageManager.h" />
+    <ClInclude Include="Thing.CoAP\IPacketProvider.h" />
+    <ClInclude Include="Thing.CoAP\IServer.h" />
+    <ClInclude Include="Thing.CoAP\MessageManager.h" />
+    <ClInclude Include="Thing.CoAP\MessageType.h" />
+    <ClInclude Include="Thing.CoAP\Method.h" />
+    <ClInclude Include="Thing.CoAP\Observer.h" />
+    <ClInclude Include="Thing.CoAP\Option.h" />
+    <ClInclude Include="Thing.CoAP\OptionValue.h" />
+    <ClInclude Include="Thing.CoAP\Packet.h" />
+    <ClInclude Include="Thing.CoAP\Request.h" />
+    <ClInclude Include="Thing.CoAP\Response.h" />
+    <ClInclude Include="Thing.CoAP\ResponseCode.h" />
+    <ClInclude Include="Thing.CoAP\Server.h" />
+    <ClInclude Include="Thing.CoAP\Status.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CoAPEndpoint.cpp" />
-    <ClCompile Include="CoAPServer.cpp" />
-    <ClCompile Include="FunctionalEndpoint.cpp" />
-    <ClCompile Include="MessageManager.cpp" />
-    <ClCompile Include="Status.cpp" />
-    <ClCompile Include="Observer.cpp" />
-    <ClCompile Include="Option.cpp" />
-    <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="Thing.CoAP\EndpointBase.cpp" />
+    <ClCompile Include="Thing.CoAP\FunctionalEndpoint.cpp" />
+    <ClCompile Include="Thing.CoAP\MessageManager.cpp" />
+    <ClCompile Include="Thing.CoAP\Observer.cpp" />
+    <ClCompile Include="Thing.CoAP\Option.cpp" />
+    <ClCompile Include="Thing.CoAP\Packet.cpp" />
+    <ClCompile Include="Thing.CoAP\Server.cpp" />
+    <ClCompile Include="Thing.CoAP\Status.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Thing.CoAP\README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{76fe1271-8874-4307-b5b0-96af71df3da3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ThingCoAP</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>Thing.CoAP</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -75,30 +78,30 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

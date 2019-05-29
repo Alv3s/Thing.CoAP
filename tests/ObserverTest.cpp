@@ -1,5 +1,5 @@
 #include "ObserverTest.h"
-#include "../Observer.h"
+#include "../Thing.CoAP/Observer.h"
 
 namespace Thing {
 	namespace CoAP {

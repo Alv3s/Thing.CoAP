@@ -1,5 +1,5 @@
 #include "OptionsTest.h"
-#include "../Option.h"
+#include "../Thing.CoAP/Option.h"
 
 namespace Thing {
 	namespace CoAP {
