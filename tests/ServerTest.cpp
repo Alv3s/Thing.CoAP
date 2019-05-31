@@ -177,7 +177,7 @@ namespace Thing {
 				EXPECT_CALL(putFunctionMock, Call(_)).Times(method == Thing::CoAP::Method::Put ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
 				EXPECT_CALL(deleteFunctionMock, Call(_)).Times(method == Thing::CoAP::Method::Delete ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
 
-				Thing::CoAP::FunctionalEndpoint& endpoint = Server.CreateEndpoint("Endpoint", Thing::CoAP::ContentFormat::ApplicationJSon)
+				Thing::CoAP::IFunctionalEndpoint& endpoint = Server.CreateEndpoint("Endpoint", Thing::CoAP::ContentFormat::ApplicationJSon)
 				.OnGet([&getFunctionMock](Thing::CoAP::Request & request) {
 					return getFunctionMock.Call(request);
 				}).OnPost([&postFunctionMock](Thing::CoAP::Request& request) {
@@ -188,7 +188,7 @@ namespace Thing {
 					return deleteFunctionMock.Call(request);
 				});
 
-				BaseEndpointTest(method, endpoint);
+				BaseEndpointTest(method, (IEndpoint&)endpoint);
 			}
 
 

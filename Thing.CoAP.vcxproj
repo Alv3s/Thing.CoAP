@@ -32,6 +32,7 @@
     <ClInclude Include="Thing.CoAP\FunctionalEndpoint.h" />
     <ClInclude Include="Thing.CoAP\Functions.h" />
     <ClInclude Include="Thing.CoAP\IEndpoint.h" />
+    <ClInclude Include="Thing.CoAP\IFunctionalEndpoint.h" />
     <ClInclude Include="Thing.CoAP\IMessageManager.h" />
     <ClInclude Include="Thing.CoAP\IPacketProvider.h" />
     <ClInclude Include="Thing.CoAP\IServer.h" />

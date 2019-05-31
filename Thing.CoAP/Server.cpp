@@ -3,6 +3,7 @@
 #include "OptionValue.h"
 #include <stdio.h>
 #include "Functions.h"
+#include "FunctionalEndpoint.h"
 
 namespace Thing {
 	namespace CoAP
@@ -29,7 +30,7 @@ namespace Thing {
 		}
 
 #pragma region Endpoint Management
-		FunctionalEndpoint& Server::CreateEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool IsObservable)
+		IFunctionalEndpoint& Server::CreateEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool IsObservable)
 		{
 			FunctionalEndpoint* endpoint = new FunctionalEndpoint(name, content, IsObservable);
 			AddEndpoint(endpoint);

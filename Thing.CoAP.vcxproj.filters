@@ -59,6 +59,9 @@
     <ClInclude Include="Thing.CoAP\Status.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Thing.CoAP\IFunctionalEndpoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Thing.CoAP\EndpointBase.cpp">

@@ -1,15 +1,14 @@
 #pragma once
 
 #include "EndpointBase.h"
-#include <functional>
+#include "IFunctionalEndpoint.h"
 
 namespace Thing 
 {
 	namespace CoAP
 	{
-		using EndpointCallback = std::function<Thing::CoAP::Status(Thing::CoAP::Request& request)>;
 
-		class FunctionalEndpoint : public EndpointBase, public virtual IEndpoint
+		class FunctionalEndpoint : public EndpointBase, public virtual IEndpoint, public virtual IFunctionalEndpoint
 		{
 		public:
 			FunctionalEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool isObservable);
@@ -24,10 +23,10 @@ namespace Thing
 			Thing::CoAP::Status Put(Thing::CoAP::Request& request) override;
 			Thing::CoAP::Status Delete(Thing::CoAP::Request& request) override;
 
-			FunctionalEndpoint& OnGet(EndpointCallback callback);
-			FunctionalEndpoint& OnPost(EndpointCallback callback);
-			FunctionalEndpoint& OnPut(EndpointCallback callback);
-			FunctionalEndpoint& OnDelete(EndpointCallback callback);
+			FunctionalEndpoint& OnGet(EndpointCallback callback) override;
+			FunctionalEndpoint& OnPost(EndpointCallback callback) override;
+			FunctionalEndpoint& OnPut(EndpointCallback callback) override;
+			FunctionalEndpoint& OnDelete(EndpointCallback callback) override;
 		private:
 			const std::string name;
 			const Thing::CoAP::ContentFormat contentFormat;
