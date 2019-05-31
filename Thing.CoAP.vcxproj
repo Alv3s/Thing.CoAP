@@ -27,6 +27,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Thing.CoAP\ObserveToken.h" />
+    <ClInclude Include="Thing.CoAP\IClient.h" />
+    <ClInclude Include="Thing.CoAP\IPAddress.h" />
+    <ClInclude Include="Thing.CoAP\Client.h" />
     <ClInclude Include="Thing.CoAP\ContentFormat.h" />
     <ClInclude Include="Thing.CoAP\EndpointBase.h" />
     <ClInclude Include="Thing.CoAP\FunctionalEndpoint.h" />
@@ -45,15 +49,19 @@
     <ClInclude Include="Thing.CoAP\Packet.h" />
     <ClInclude Include="Thing.CoAP\Request.h" />
     <ClInclude Include="Thing.CoAP\Response.h" />
+    <ClInclude Include="Thing.CoAP\ResponseCallback.h" />
     <ClInclude Include="Thing.CoAP\ResponseCode.h" />
     <ClInclude Include="Thing.CoAP\Server.h" />
     <ClInclude Include="Thing.CoAP\Status.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Thing.CoAP\ObserveToken.cpp" />
+    <ClCompile Include="Thing.CoAP\Client.cpp" />
     <ClCompile Include="Thing.CoAP\EndpointBase.cpp" />
     <ClCompile Include="Thing.CoAP\FunctionalEndpoint.cpp" />
     <ClCompile Include="Thing.CoAP\MessageManager.cpp" />
     <ClCompile Include="Thing.CoAP\Observer.cpp" />
+    <ClCompile Include="Thing.CoAP\ObserveToken.cpp" />
     <ClCompile Include="Thing.CoAP\Option.cpp" />
     <ClCompile Include="Thing.CoAP\Packet.cpp" />
     <ClCompile Include="Thing.CoAP\Server.cpp" />
