@@ -27,6 +27,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Thing.CoAP\IPAddress.h" />
+    <ClInclude Include="Thing.CoAP\Client.h" />
     <ClInclude Include="Thing.CoAP\ContentFormat.h" />
     <ClInclude Include="Thing.CoAP\EndpointBase.h" />
     <ClInclude Include="Thing.CoAP\FunctionalEndpoint.h" />
@@ -50,6 +52,7 @@
     <ClInclude Include="Thing.CoAP\Status.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Thing.CoAP\Client.cpp" />
     <ClCompile Include="Thing.CoAP\EndpointBase.cpp" />
     <ClCompile Include="Thing.CoAP\FunctionalEndpoint.cpp" />
     <ClCompile Include="Thing.CoAP\MessageManager.cpp" />

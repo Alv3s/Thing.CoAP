@@ -62,6 +62,12 @@
     <ClInclude Include="Thing.CoAP\IFunctionalEndpoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Thing.CoAP\Client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Thing.CoAP\IPAddress.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Thing.CoAP\EndpointBase.cpp">
@@ -86,6 +92,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Thing.CoAP\Status.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Thing.CoAP\Client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

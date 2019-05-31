@@ -4,12 +4,11 @@
 #include "Status.h"
 #include "IEndpoint.h"
 #include "IFunctionalEndpoint.h"
+#include "IPAddress.h"
 
 namespace Thing {
 	namespace CoAP
 	{
-		typedef uint32_t IPAddress;
-
 		class IServer
 		{
 		public:
