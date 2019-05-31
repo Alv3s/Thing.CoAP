@@ -153,9 +153,17 @@ namespace Thing {
 							break;
 						}
 
+						Thing::CoAP::IEndpoint* endpoint = endpoints[url];
+						bool observeRequestButEndpointDoesntSupport = false;
 						for (Thing::CoAP::Option& option : request.GetOptions())
 							if (option.GetNumber() == Thing::CoAP::OptionValue::Observe)
 							{
+								if (!endpoint->IsObservable())
+								{
+									observeRequestButEndpointDoesntSupport = true;
+									break;
+								}
+
 								Thing::CoAP::Observer obs(address, port, request.GetTokens());
 								if (option.GetLenght() > 0 && option.GetBuffer()[0] == 1)
 									removeObserver(url, obs);
@@ -163,9 +171,8 @@ namespace Thing {
 									addObserver(url, obs);
 								break;
 							}
-
-						Thing::CoAP::IEndpoint* endpoint = endpoints[url];
-						Thing::CoAP::Status e = endpoint->Get(request);
+						
+						Thing::CoAP::Status e = observeRequestButEndpointDoesntSupport ? Status::MethodNotAllowed() : endpoint->Get(request);
 						AddContentFormat(response, endpoint->GetContentFormat());
 						std::string payload = e.GetPayload();
 						response.SetCode(static_cast<uint8_t>(e.GetCode()));
