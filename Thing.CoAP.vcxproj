@@ -61,7 +61,6 @@
     <ClCompile Include="Thing.CoAP\FunctionalEndpoint.cpp" />
     <ClCompile Include="Thing.CoAP\MessageManager.cpp" />
     <ClCompile Include="Thing.CoAP\Observer.cpp" />
-    <ClCompile Include="Thing.CoAP\ObserveToken.cpp" />
     <ClCompile Include="Thing.CoAP\Option.cpp" />
     <ClCompile Include="Thing.CoAP\Packet.cpp" />
     <ClCompile Include="Thing.CoAP\Server.cpp" />

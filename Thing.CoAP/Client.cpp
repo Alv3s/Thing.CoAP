@@ -215,9 +215,6 @@ namespace Thing
 			request.SetTokens(std::vector<uint8_t>(tokens, tokens + 2));
 			request.SetType(Thing::CoAP::MessageType::NonConfirmable);
 			std::vector<Thing::CoAP::Option> options;
-			Thing::CoAP::Option observeOption;
-			observeOption.SetNumber(Thing::CoAP::OptionValue::Observe);
-			options.push_back(observeOption);
 			Thing::CoAP::Option urlPath;
 			urlPath.SetNumber(Thing::CoAP::OptionValue::URIPath);
 			urlPath.SetOption((uint8_t*)endpoint.c_str(), endpoint.size());
