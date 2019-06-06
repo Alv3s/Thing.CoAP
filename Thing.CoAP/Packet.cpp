@@ -101,14 +101,9 @@ namespace Thing {
 			return options;
 		}
 
-		int Packet::GetPayloadLength()
+		std::vector<uint8_t> Packet::GetPayload()
 		{
-			return static_cast<int>(payload.size());
-		}
-
-		uint8_t* Packet::GetPayload()
-		{
-			return payload.size() == 0 ? NULL : &payload[0];
+			return payload;
 		}
 
 
@@ -167,22 +162,23 @@ namespace Thing {
 			this->payload = std::vector<uint8_t>(payload, payload + length);
 		}
 
+		void Packet::SetPayload(std::vector<uint8_t> payload)
+		{
+			this->payload = payload;
+		}
+
 
 #define COAP_OPTION_DELTA(v, n) (v < 13 ? (*n = (0xFF & v)) : (v <= 0xFF + 13 ? (*n = 13) : (*n = 14)))
-		void Packet::SerializePacket(uint8_t ** payload, int * length)
+		std::vector<uint8_t> Packet::SerializePacket()
 		{
-			*length = 0;
-			*payload = nullptr;
-
 			std::vector<uint8_t>& tokens = GetTokens();
 			int size = Packet::GetHeaderSize() + static_cast<int>(tokens.size()) + optionsSize();
-			if (GetPayloadLength() > 0)
-				size += 1 + GetPayloadLength();
+			if (this->payload.size() > 0)
+				size += 1 + this->payload.size();
 
-			*length = size;
-			*payload = new uint8_t[size];
+			std::vector<uint8_t> payload((size_t)size);
 
-			uint8_t* buffer = *payload;
+			uint8_t* buffer = &payload[0];
 			buffer[0] = (GetVersion() << 6) | ((static_cast<uint8_t>(GetType()) & 0x03) << 4) | (tokens.size() & 0x0F);
 			buffer[1] = static_cast<uint8_t>(GetCode());
 			buffer[2] = GetMessageID() >> 8;
@@ -228,11 +224,13 @@ namespace Thing {
 				running_delta = static_cast<uint16_t>(option.GetNumber());
 			}
 
-			if (GetPayloadLength() > 0)
+			if (this->payload.size() > 0)
 			{
 				*p++ = 0xFF;
-				memcpy(p, GetPayload(), GetPayloadLength());
+				memcpy(p, &this->payload[0], this->payload.size());
 			}
+
+			return payload;
 		}
 
 		void Packet::DesserializePacket(uint8_t* buffer, int length)
@@ -267,6 +265,15 @@ namespace Thing {
 					SetPayload(NULL, 0);
 			}
 		}
+
+		void Packet::DesserializePacket(std::vector<uint8_t> payload)
+		{
+			if (payload.size() == 0)
+				DesserializePacket(NULL, 0);
+			else
+				DesserializePacket(&payload[0], payload.size());
+		}
+
 
 		int Packet::optionsSize()
 		{

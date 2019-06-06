@@ -47,8 +47,8 @@ namespace Thing {
 				EXPECT_EQ(version, packet.GetVersion());
 				EXPECT_EQ(messageId, packet.GetMessageID());
 
-				EXPECT_EQ(sizeof(payload), packet.GetPayloadLength());
-				EXPECT_EQ(0, memcmp(payload, packet.GetPayload(), sizeof(payload)));
+				EXPECT_EQ(sizeof(payload), packet.GetPayload().size());
+				EXPECT_EQ(0, memcmp(payload, &packet.GetPayload()[0], sizeof(payload)));
 
 				EXPECT_EQ(sizeof(tokens), packet.GetTokens().size());
 				EXPECT_EQ(0, memcmp(tokens, &packet.GetTokens()[0], sizeof(tokens)));
@@ -159,8 +159,110 @@ namespace Thing {
 					EXPECT_TRUE(0 == std::memcmp(aux, option.GetBuffer(), option.GetLenght()));
 				}
 
-				EXPECT_EQ(sizeof(payload), p.GetPayloadLength());
-				EXPECT_TRUE(0 == std::memcmp(payload, p.GetPayload(), sizeof(payload)));
+				EXPECT_EQ(sizeof(payload), p.GetPayload().size());
+				EXPECT_TRUE(0 == std::memcmp(payload, &p.GetPayload()[0], sizeof(payload)));
+				delete[] buffer;
+			}
+
+			TEST_F(PacketTest, DesserializeTestViaVector)
+			{
+				const uint8_t version = 1;
+				const uint8_t type = static_cast<uint8_t>(Thing::CoAP::MessageType::Reset);
+				const uint8_t code = static_cast<uint8_t>(Thing::CoAP::Method::Get);
+				const uint16_t transactionID = 0xFE0F;
+				const uint8_t tokens[] = { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+				const uint8_t option1[] = { 0x13, 0x01, 0xA1, 0x01 }; //Option Number 0 + 1 = 1
+				const uint8_t option2[] = { 0xD3, 0x01, 0x02, 0xB2, 0x02 }; //Option Number 1 + (13+1) = 15
+				const uint8_t option3[] = { 0xDD, 0x02, 0x01, 0x03, 0xC3, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03 }; //Option Number 15 + (13 + 2) = 30
+				const uint8_t option4[] = { 0xE3, 0x00, 0xA0, 0x04, 0xD4, 0x04 }; //Option Number = 30 + (269 + 160) = 459
+				const uint8_t option5[] = { 0xED, 0x0B, 0xA0, 0x01, 0x03, 0xC3, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03 }; //Option Number 459 + (269 + 2976) = 3704
+				const uint8_t option6[5 + 270] = { 0xEE, 0x00, 0x01, 0x00, 0x01 }; //Option Number 3704 + (269 + 1) = 3974
+				const uint8_t* options[] = { option1, option2, option3, option4, option5, option6 };
+				const uint8_t payloadMarker = 0xFF;
+				const uint8_t payload[] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A };
+
+				int size = Thing::CoAP::Packet::GetHeaderSize() +
+					sizeof(tokens) +
+					sizeof(option1) +
+					sizeof(option2) +
+					sizeof(option3) +
+					sizeof(option4) +
+					sizeof(option5) +
+					sizeof(option6) +
+					sizeof(uint8_t) +
+					sizeof(payload);
+				uint8_t* buffer = new uint8_t[size];
+				buffer[0] = (0b11000000 & (version << 6)) | (0b00110000 & (type << 4)) | (0b00001111 & sizeof(tokens));
+				buffer[1] = code;
+				buffer[2] = 0xFF & (transactionID >> 8);
+				buffer[3] = 0xFF & transactionID;
+				std::memcpy(&buffer[4], tokens, sizeof(tokens));
+				std::memcpy(&buffer[4 + sizeof(tokens)], option1, sizeof(option1));
+				std::memcpy(&buffer[4 + sizeof(tokens) + sizeof(option1)], option2, sizeof(option2));
+				std::memcpy(&buffer[4 + sizeof(tokens) + sizeof(option1) + sizeof(option2)], option3, sizeof(option3));
+				std::memcpy(&buffer[4 + sizeof(tokens) + sizeof(option1) + sizeof(option2) + sizeof(option3)], option4, sizeof(option4));
+				std::memcpy(&buffer[4 + sizeof(tokens) + sizeof(option1) + sizeof(option2) + sizeof(option3) + sizeof(option4)], option5, sizeof(option5));
+				std::memcpy(&buffer[4 + sizeof(tokens) + sizeof(option1) + sizeof(option2) + sizeof(option3) + sizeof(option4) + sizeof(option5)], option6, sizeof(option6));
+				buffer[4 + sizeof(tokens) + sizeof(option1) + sizeof(option2) + sizeof(option3) + sizeof(option4) + sizeof(option5) + sizeof(option6)] = payloadMarker;
+				std::memcpy(&buffer[4 + sizeof(tokens) + sizeof(option1) + sizeof(option2) + sizeof(option3) + sizeof(option4) + sizeof(option5) + sizeof(option6) + 1], payload, sizeof(payload));
+
+				Thing::CoAP::Packet p;
+				p.DesserializePacket(std::vector<uint8_t>(buffer, buffer + size));
+
+				EXPECT_EQ(version, static_cast<uint8_t>(p.GetVersion()));
+				EXPECT_EQ(type, static_cast<uint8_t>(p.GetType()));
+				EXPECT_EQ(code, static_cast<uint8_t>(p.GetCode()));
+				EXPECT_EQ(transactionID, static_cast<uint16_t>(p.GetMessageID()));
+
+				EXPECT_EQ(sizeof(tokens), p.GetTokens().size());
+				EXPECT_TRUE(0 == std::memcmp(tokens, &p.GetTokens()[0], sizeof(tokens)));
+
+				std::vector<Thing::CoAP::Option>& pOptions = p.GetOptions();
+				EXPECT_EQ(6, pOptions.size());
+				int runningDelta = 0;
+				for (int i = 0; i < pOptions.size(); ++i)
+				{
+					Thing::CoAP::Option option = pOptions[i];
+
+					int currentDelta = 0 | ((options[i][0] >> 4) & 0x0F);
+					uint16_t currentLength = options[i][0] & 0x0F;
+
+					uint8_t* aux = ((uint8_t*)options[i]) + 1;
+
+					if (currentDelta == 13)
+					{
+						currentDelta = *aux + 13;
+						aux += 1;
+					}
+					else if (currentDelta == 14)
+					{
+						currentDelta = (((aux[0] << 8) & 0xFF00) | (aux[1] & 0x00FF)) + (int)269;
+						aux += 2;
+					}
+
+					if (currentLength == 13)
+					{
+						currentLength = *aux + 13;
+						aux += 1;
+					}
+					else if (currentLength == 14)
+					{
+						currentLength = (((aux[0] << 8) & 0xFF00) | (aux[1] & 0x00FF)) + (int)269;
+						aux += 2;
+					}
+
+					int expectedOptionNumber = runningDelta + currentDelta;
+					int expectedOptionLength = currentLength;
+
+					runningDelta = expectedOptionNumber;
+
+					EXPECT_EQ(expectedOptionLength, option.GetLenght());
+					EXPECT_EQ(static_cast<Thing::CoAP::OptionValue>(expectedOptionNumber), option.GetNumber());
+					EXPECT_TRUE(0 == std::memcmp(aux, option.GetBuffer(), option.GetLenght()));
+				}
+
+				EXPECT_EQ(sizeof(payload), p.GetPayload().size());
+				EXPECT_TRUE(0 == std::memcmp(payload, &p.GetPayload()[0], sizeof(payload)));
 				delete[] buffer;
 			}
 
@@ -227,9 +329,7 @@ namespace Thing {
 
 				packet.SetPayload((uint8_t*)payload, sizeof(payload));
 
-				uint8_t* buffer;
-				int length;
-				packet.SerializePacket(&buffer, &length);
+				std::vector<uint8_t> buffer = packet.SerializePacket();
 
 				EXPECT_EQ(version, (buffer[0] >> 6) & 0b00000011);
 				EXPECT_EQ(type, (buffer[0] >> 4) & 0b00000011);
@@ -284,8 +384,6 @@ namespace Thing {
 
 				EXPECT_EQ(0xFF, p[0]);
 				EXPECT_TRUE(0 == std::memcmp(&p[1], payload, sizeof(payload)));
-
-				delete[] buffer;
 			}
 
 			TEST_F(PacketTest, NoPayloadNoCrash)
@@ -315,8 +413,27 @@ namespace Thing {
 
 				packet.SetPayload(NULL, 0);
 
-				EXPECT_EQ(NULL, packet.GetPayload());
-				EXPECT_EQ(0, packet.GetPayloadLength());
+				EXPECT_EQ(0, packet.GetPayload().size());
+			}
+		
+			TEST_F(PacketTest, SetPayload)
+			{
+				uint8_t buffer[] = { 0x01, 0x02, 0x03 };
+				Thing::CoAP::Packet packet;
+				packet.SetPayload(buffer, sizeof(buffer));
+
+				ASSERT_EQ(sizeof(buffer), packet.GetPayload().size());
+				EXPECT_TRUE(0 == std::memcmp(buffer, &packet.GetPayload()[0], sizeof(buffer)));
+			}
+
+			TEST_F(PacketTest, SetPayloadViaVector)
+			{
+				uint8_t buffer[] = { 0x01, 0x02, 0x03 };
+				Thing::CoAP::Packet packet;
+				packet.SetPayload(std::vector<uint8_t>(buffer, buffer + sizeof(buffer)));
+
+				ASSERT_EQ(sizeof(buffer), packet.GetPayload().size());
+				EXPECT_TRUE(0 == std::memcmp(buffer, &packet.GetPayload()[0], sizeof(buffer)));
 			}
 		}
 	}

@@ -2,7 +2,6 @@
 
 #include "gmock/gmock.h"
 #include "../Thing.CoAP/IPacketProvider.h"
-
 namespace Thing {
 	namespace CoAP {
 		namespace Tests {
@@ -12,10 +11,8 @@ namespace Thing {
 				MOCK_METHOD1(Start, void(int));
 				MOCK_METHOD0(Stop, void());
 
-				MOCK_METHOD4(SendPacket, void(uint8_t*, int, Thing::CoAP::IPAddress, int));
-
-				MOCK_METHOD4(ReadPacket, bool(uint8_t**, int*, Thing::CoAP::IPAddress*, int*));
-				MOCK_METHOD1(DestroyPacket, void(uint8_t*));
+				MOCK_METHOD3(SendPacket, void(std::vector<uint8_t>, Thing::CoAP::IPAddress, int));
+				MOCK_METHOD3(ReadPacket, bool(std::vector<uint8_t>*, Thing::CoAP::IPAddress*, int*));
 			};
 		}
 	}

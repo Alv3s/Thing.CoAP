@@ -114,15 +114,12 @@ namespace Thing
 			request.SetOptions(options);
 			request.SetCode(Thing::CoAP::Method::Get);
 
-			uint8_t* requestBuffer;
-			int requestLength;
-			request.SerializePacket(&requestBuffer, &requestLength);
+			std::vector<uint8_t> serializedBuffer = request.SerializePacket();
 
-			packetProvider->SendPacket(requestBuffer, requestLength, peerIP, peerPort);
+			packetProvider->SendPacket(serializedBuffer, peerIP, peerPort);
 			ObserveToken observeToken(messageID, endpoint, callback);
 			observeRequests[messageID] = observeToken;
 
-			delete[] requestBuffer;
 			return observeToken;
 		}
 
@@ -151,18 +148,14 @@ namespace Thing
 			request.SetOptions(options);
 			request.SetCode(Thing::CoAP::Method::Get);
 
-			uint8_t* requestBuffer;
-			int requestLength;
-			request.SerializePacket(&requestBuffer, &requestLength);
+			std::vector<uint8_t> requestBuffer = request.SerializePacket();
 
-			packetProvider->SendPacket(requestBuffer, requestLength, peerIP, peerPort);
+			packetProvider->SendPacket(requestBuffer, peerIP, peerPort);
 
 			pendingRequests[tokenID] = [this, &tokenID](Thing::CoAP::Response response)
 			{
 				observeRequests.erase(tokenID);
 			};
-
-			delete[] requestBuffer;
 		}
 
 		void Client::Process()
@@ -170,15 +163,13 @@ namespace Thing
 			if (!packetProvider)
 				return;
 
-			uint8_t* buffer = NULL;
-			int packetLength = 0;
-
 			IPAddress address;
 			int port = 0;
-			if (packetProvider->ReadPacket(&buffer, &packetLength, &address, &port))
+			std::vector<uint8_t> buffer;
+			if (packetProvider->ReadPacket(&buffer, &address, &port))
 			{
 				Thing::CoAP::Response response;
-				response.DesserializePacket(buffer, packetLength);
+				response.DesserializePacket(buffer);
 
 				std::vector<uint8_t> tokens = response.GetTokens();
 				if (tokens.size() >= 2)
@@ -197,7 +188,6 @@ namespace Thing
 							entryObserving->second.GetCallback()(response);
 					}
 				}
-				packetProvider->DestroyPacket(buffer);
 			}
 		}
 
@@ -224,14 +214,10 @@ namespace Thing
 			if (payload.size() > 0)
 				request.SetPayload(&payload[0], payload.size());
 
-			uint8_t* requestBuffer;
-			int requestLength;
-			request.SerializePacket(&requestBuffer, &requestLength);
+			std::vector<uint8_t> requestBuffer = request.SerializePacket();
 
-			packetProvider->SendPacket(requestBuffer, requestLength, peerIP, peerPort);
+			packetProvider->SendPacket(requestBuffer, peerIP, peerPort);
 			pendingRequests[messageID] = callback;
-
-			delete[] requestBuffer;
 		}
 
 		void Client::Request(std::string endpoint, Method method, std::string payload, ResponseCallback callback)

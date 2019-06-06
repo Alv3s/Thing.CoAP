@@ -19,7 +19,7 @@ namespace Thing {
 				void FunctionalEndpointTest(Thing::CoAP::Method method);
 				void EndpointNotFoundTest(Thing::CoAP::Method method);
 				void MultipleEndpointTest(EndpointMock* endpointMocks, int size, int callIndex, Thing::CoAP::Method method);
-				void ResourceDiscoveryTest(uint8_t** buffer, int* length);
+				void ResourceDiscoveryTest(std::vector<uint8_t>* responseBuffer);
 				void ObserveTest(bool observe, Thing::CoAP::IPAddress ip, int port, std::vector<uint8_t> tokens, std::string endpoint, uint8_t** response, int* responseLength);
 
 				Thing::CoAP::Server Server;

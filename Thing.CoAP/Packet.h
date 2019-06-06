@@ -20,8 +20,7 @@ namespace Thing {
 			uint16_t GetMessageID();
 			std::vector<uint8_t>& GetTokens();
 			std::vector<Thing::CoAP::Option>& GetOptions();
-			int GetPayloadLength();
-			uint8_t* GetPayload();
+			std::vector<uint8_t> GetPayload();
 
 
 			void SetVersion(uint8_t version);
@@ -40,9 +39,11 @@ namespace Thing {
 			void SetOptions(std::vector<Thing::CoAP::Option> options);
 			void ClearOptions();
 			void SetPayload(uint8_t* payload, int length);
+			void SetPayload(std::vector<uint8_t> payload);
 
-			void SerializePacket(uint8_t** payload, int* length);
+			std::vector<uint8_t> SerializePacket();
 			void DesserializePacket(uint8_t* payload, int length);
+			void DesserializePacket(std::vector<uint8_t> payload);
 		private:
 			uint8_t version;
 			Thing::CoAP::MessageType type;

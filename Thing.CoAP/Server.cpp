@@ -85,15 +85,14 @@ namespace Thing {
 		{
 			if (!packetProvider)
 				return;
-			uint8_t* buffer = NULL;
-			int packetLength = 0;
 
 			IPAddress address;
 			int port = 0;
-			if (packetProvider->ReadPacket(&buffer, &packetLength, &address, &port))
+			std::vector<uint8_t> buffer;
+			if (packetProvider->ReadPacket(&buffer, &address, &port))
 			{
 				Thing::CoAP::Request request;
-				request.DesserializePacket(buffer, packetLength);
+				request.DesserializePacket(buffer);
 
 				//call endpoint url function
 				std::string url = "";
@@ -230,16 +229,12 @@ namespace Thing {
 					}
 					}
 
-					uint8_t* payload = NULL;
-					int payloadLength = 0;
-					response.SerializePacket(&payload, &payloadLength);
-					packetProvider->SendPacket(payload, payloadLength, address, port);
-					delete[] payload;
+					std::vector<uint8_t> payload = response.SerializePacket();
+					packetProvider->SendPacket(payload, address, port);
 				}
 				default:
 					break;
 				}
-				packetProvider->DestroyPacket(buffer);
 			}
 		}
 
@@ -268,12 +263,8 @@ namespace Thing {
 			{
 				response.SetTokens(obs.GetTokens());
 
-				uint8_t* payload = NULL;
-				int payloadLength = 0;
-				response.SerializePacket(&payload, &payloadLength);
-
-				packetProvider->SendPacket(payload, payloadLength, obs.GetIPAddress(), obs.GetPort());
-				delete[] payload;
+				std::vector<uint8_t> payload = response.SerializePacket();
+				packetProvider->SendPacket(payload, obs.GetIPAddress(), obs.GetPort());
 			}
 		}
 
