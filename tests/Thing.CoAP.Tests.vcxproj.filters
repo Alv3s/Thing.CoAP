@@ -27,6 +27,8 @@
       <Filter>Mocks</Filter>
     </ClInclude>
     <ClInclude Include="EndpointBaseTest.h" />
+    <ClInclude Include="ClientTest.h" />
+    <ClInclude Include="Common.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StatusTest.cpp" />
@@ -37,5 +39,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
     <ClCompile Include="EndpointBaseTest.cpp" />
+    <ClCompile Include="ClientTest.cpp" />
   </ItemGroup>
 </Project>

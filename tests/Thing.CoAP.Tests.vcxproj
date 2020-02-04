@@ -37,6 +37,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ClientTest.cpp" />
     <ClCompile Include="EndpointBaseTest.cpp" />
     <ClCompile Include="ObserverTest.cpp" />
     <ClCompile Include="OptionsTest.cpp" />
@@ -45,6 +46,8 @@
     <ClCompile Include="StatusTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientTest.h" />
+    <ClInclude Include="Common.h" />
     <ClInclude Include="EndpointBaseMock.h" />
     <ClInclude Include="EndpointBaseTest.h" />
     <ClInclude Include="EndpointMock.h" />

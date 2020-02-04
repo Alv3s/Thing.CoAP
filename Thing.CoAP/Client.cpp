@@ -6,9 +6,9 @@ namespace Thing
 	{
 		Client::Client() : packetProvider(NULL),
 			currentMessageId(1),
-			port(5682),
 			peerIP(),
-			peerPort()
+			peerPort(),
+			port(5682)
 		{
 		}
 

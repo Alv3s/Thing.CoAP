@@ -20,8 +20,9 @@ namespace Thing {
 			options.push_back(option);
 		}
 
-		Server::Server() : port(5683),
-							packetProvider(NULL)
+		Server::Server() : 
+			packetProvider(NULL),
+			port(5683)
 		{
 		}
 
