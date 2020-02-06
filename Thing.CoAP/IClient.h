@@ -1,3 +1,5 @@
+#pragma once
+
 #include "IPacketProvider.h"
 #include "ObserveToken.h"
 #include "ResponseCallback.h"
