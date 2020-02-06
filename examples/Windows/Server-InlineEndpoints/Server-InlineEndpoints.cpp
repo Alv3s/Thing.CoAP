@@ -7,7 +7,7 @@
 
 int main()
 {
-	//Declare our CoAP server  instance
+	//Declare our CoAP server instance
 	Thing::CoAP::Server server;
 
 	//Tell our server that we will be using UDP 
