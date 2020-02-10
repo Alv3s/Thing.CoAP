@@ -1,5 +1,6 @@
 {
   "name": "Thing.CoAP",
+  "version": "1.0.0",
   "keywords": "iot, framework, coap, communication",
   "description": "Thing.CoAP is a cross-platform library for CoAP communication.",
   "repository":
