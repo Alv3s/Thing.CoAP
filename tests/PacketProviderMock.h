@@ -2,6 +2,7 @@
 
 #include "gmock/gmock.h"
 #include "../Thing.CoAP/IPacketProvider.h"
+
 namespace Thing {
 	namespace CoAP {
 		namespace Tests {

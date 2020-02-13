@@ -16,23 +16,23 @@ namespace Thing {
 			Server();
 			virtual ~Server();
 
-			virtual IFunctionalEndpoint& CreateEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool IsObservable = true) override;
+			IFunctionalEndpoint& CreateEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool IsObservable = true) override;
 
-			virtual void AddEndpoint(Thing::CoAP::IEndpoint* endpoint) override;
-			virtual void AddEndpoint(Thing::CoAP::IEndpoint& endpoint) override;
+			void AddEndpoint(Thing::CoAP::IEndpoint* endpoint) override;
+			void AddEndpoint(Thing::CoAP::IEndpoint& endpoint) override;
 
-			virtual void RemoveEndpoint(Thing::CoAP::IEndpoint* endpoint) override;
-			virtual void RemoveEndpoint(Thing::CoAP::IEndpoint& endpoint) override;
+			void RemoveEndpoint(Thing::CoAP::IEndpoint* endpoint) override;
+			void RemoveEndpoint(Thing::CoAP::IEndpoint& endpoint) override;
 
-			virtual void SetPort(int port) override;
-			virtual int GetPort() override;
+			void SetPort(int port) override;
+			int GetPort() override;
 
-			virtual void Start() override;
-			virtual void Stop() override;
-			virtual void Process() override;
+			void Start() override;
+			void Stop() override;
+			void Process() override;
 
-			virtual void NotifyObservers(Thing::CoAP::IEndpoint* endpoint, Thing::CoAP::Status r) override;
-			virtual void NotifyObservers(Thing::CoAP::IEndpoint& endpoint, Thing::CoAP::Status r) override;
+			void NotifyObservers(Thing::CoAP::IEndpoint* endpoint, Thing::CoAP::Status r) override;
+			void NotifyObservers(Thing::CoAP::IEndpoint& endpoint, Thing::CoAP::Status r) override;
 
 			void SetPacketProvider(IPacketProvider* provider);
 			void SetPacketProvider(IPacketProvider& provider);

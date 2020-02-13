@@ -2,6 +2,11 @@
 
 #include "../IPacketProvider.h"
 #include <WiFiUdp.h>
+#ifdef ESP8266
+#include <ESP8266WiFi.h>
+#else
+#include <WiFi.h>
+#endif
 
 namespace Thing
 {
@@ -12,25 +17,31 @@ namespace Thing
 			class UDPPacketProvider : public Thing::CoAP::IPacketProvider
 			{
 			public:
-				virtual void Start(int port) override 
+				void Start(int port) override 
 				{
+					::IPAddress multicastAddress(224, 0, 1, 187);
+					Udp.beginMulticast(WiFi.localIP(), multicastAddress, port);
 					Udp.begin(port);
 				}
 				
-				virtual void Stop() override
+				void Stop() override
 				{
 					Udp.stop();
 				}
 
-				virtual void SendPacket(std::vector<uint8_t> buffer, Thing::CoAP::IPAddress ip, int port) override
+				void SendPacket(std::vector<uint8_t> buffer, Thing::CoAP::IPAddress ip, int port) override
 				{
-					Udp.beginPacket(ip, port);
+					if(ip & 0xE0000000) //If is multicast
+						Udp.beginPacketMulticast(ip, port, WiFi.localIP());
+					else
+						Udp.beginPacket(ip, port);
+						
 					if(buffer.size() > 0)
 						Udp.write(&buffer[0], buffer.size());
 					Udp.endPacket();
 				}
 				
-				virtual bool ReadPacket(std::vector<uint8_t>* buffer, Thing::CoAP::IPAddress* address, int* port) override
+				bool ReadPacket(std::vector<uint8_t>* buffer, Thing::CoAP::IPAddress* address, int* port) override
 				{
 					int32_t packetlen = Udp.parsePacket();
 					*buffer = std::vector<uint8_t>(packetlen);

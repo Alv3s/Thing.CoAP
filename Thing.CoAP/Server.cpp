@@ -148,7 +148,7 @@ namespace Thing {
 							break;
 						}
 
-						if (!endpoints.count(url))
+						if (endpoints.find(url) == endpoints.end())
 						{
 							noEndpointDefinedResponse(&response, address, port);
 							break;
@@ -182,7 +182,7 @@ namespace Thing {
 					}
 					case Thing::CoAP::Method::Put:
 					{
-						if (!endpoints.count(url))
+						if (endpoints.find(url) == endpoints.end())
 						{
 							noEndpointDefinedResponse(&response, address, port);
 							break;
@@ -198,7 +198,7 @@ namespace Thing {
 					}
 					case Thing::CoAP::Method::Post:
 					{
-						if (!endpoints.count(url))
+						if (endpoints.find(url) == endpoints.end())
 						{
 							noEndpointDefinedResponse(&response, address, port);
 							break;
@@ -214,7 +214,7 @@ namespace Thing {
 					}
 					case Thing::CoAP::Method::Delete:
 					{
-						if (!endpoints.count(url))
+						if (endpoints.find(url) == endpoints.end())
 						{
 							noEndpointDefinedResponse(&response, address, port);
 							break;
