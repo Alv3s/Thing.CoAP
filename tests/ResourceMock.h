@@ -1,15 +1,15 @@
 #pragma once
 
 #include "gmock/gmock.h"
-#include "../Thing.CoAP/IEndpoint.h"
+#include "../Thing.CoAP/IResource.h"
 
 namespace Thing {
 	namespace CoAP {
 		namespace Tests {
-			class EndpointMock : public virtual Thing::CoAP::IEndpoint
+			class ResourceMock : public virtual Thing::CoAP::IResource
 			{
 			public:
-				MOCK_CONST_METHOD0(GetEndpoint, std::string());
+				MOCK_CONST_METHOD0(GetName, std::string());
 				MOCK_CONST_METHOD0(GetContentFormat, Thing::CoAP::ContentFormat());
 				MOCK_CONST_METHOD0(IsObservable, bool());
 

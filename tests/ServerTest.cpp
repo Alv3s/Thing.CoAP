@@ -47,9 +47,9 @@ namespace Thing {
 			}
 
 #pragma region Simple Endpoint Tests
-			void ServerTest::BaseEndpointTest(Thing::CoAP::Method method, Thing::CoAP::IEndpoint& endpoint)
+			void ServerTest::BaseEndpointTest(Thing::CoAP::Method method, Thing::CoAP::IResource& endpoint)
 			{
-				const std::string endpointPath = endpoint.GetEndpoint();
+				const std::string endpointPath = endpoint.GetName();
 				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
 				const uint16_t messageID = 0x1234;
 				const Thing::CoAP::IPAddress requestIPAddress = 0x01010101;
@@ -100,15 +100,15 @@ namespace Thing {
 
 			void ServerTest::SimpleEndpointTest(Thing::CoAP::Method method)
 			{
-				EndpointMock endpoint;
-				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return("Endpoint"));
+				ResourceMock endpoint;
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return("Endpoint"));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(Thing::CoAP::ContentFormat::ApplicationJSon));
 				EXPECT_CALL(endpoint, Get(_)).Times(method == Thing::CoAP::Method::Get ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
 				EXPECT_CALL(endpoint, Post(_)).Times(method == Thing::CoAP::Method::Post ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
 				EXPECT_CALL(endpoint, Put(_)).Times(method == Thing::CoAP::Method::Put ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
 				EXPECT_CALL(endpoint, Delete(_)).Times(method == Thing::CoAP::Method::Delete ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
 				
-				Server.AddEndpoint(endpoint);
+				Server.AddResource(endpoint);
 				BaseEndpointTest(method, endpoint);
 			}
 
@@ -124,7 +124,7 @@ namespace Thing {
 				EXPECT_CALL(putFunctionMock, Call(_)).Times(method == Thing::CoAP::Method::Put ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
 				EXPECT_CALL(deleteFunctionMock, Call(_)).Times(method == Thing::CoAP::Method::Delete ? 1 : 0).WillOnce(Return(Thing::CoAP::Status::Ok()));
 
-				Thing::CoAP::IFunctionalEndpoint& endpoint = Server.CreateEndpoint("Endpoint", Thing::CoAP::ContentFormat::ApplicationJSon)
+				Thing::CoAP::IFunctionalResource& endpoint = Server.CreateResource("Endpoint", Thing::CoAP::ContentFormat::ApplicationJSon)
 				.OnGet([&getFunctionMock](Thing::CoAP::Request & request) {
 					return getFunctionMock.Call(request);
 				}).OnPost([&postFunctionMock](Thing::CoAP::Request& request) {
@@ -135,7 +135,7 @@ namespace Thing {
 					return deleteFunctionMock.Call(request);
 				});
 
-				BaseEndpointTest(method, (IEndpoint&)endpoint);
+				BaseEndpointTest(method, (IResource&)endpoint);
 			}
 
 
@@ -252,9 +252,9 @@ namespace Thing {
 			}
 #pragma endregion
 
-			void ServerTest::MultipleEndpointTest(EndpointMock* endpoint, int size, int callIndex, Thing::CoAP::Method method)
+			void ServerTest::MultipleEndpointTest(ResourceMock* endpoint, int size, int callIndex, Thing::CoAP::Method method)
 			{
-				const std::string endpointPath = endpoint[callIndex].GetEndpoint();
+				const std::string endpointPath = endpoint[callIndex].GetName();
 				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
 				const uint16_t messageID = 0x1234;
 				const Thing::CoAP::IPAddress requestIPAddress = 0x01010101;
@@ -312,16 +312,16 @@ namespace Thing {
 			TEST_F(ServerTest, MultipleEndpointTest)
 			{
 				const int totalEndpoints = 5;
-				EndpointMock endpoint[totalEndpoints];
+				ResourceMock endpoint[totalEndpoints];
 
 				const std::string endpointPath = "Endpoint";
 				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
 
 				for (int i = 0; i < totalEndpoints; ++i)
 				{
-					EXPECT_CALL(endpoint[i], GetEndpoint()).WillRepeatedly(Return(endpointPath + std::to_string(i)));
+					EXPECT_CALL(endpoint[i], GetName()).WillRepeatedly(Return(endpointPath + std::to_string(i)));
 					EXPECT_CALL(endpoint[i], GetContentFormat()).WillRepeatedly(Return(contentFormat));
-					Server.AddEndpoint(endpoint[i]);
+					Server.AddResource(endpoint[i]);
 				}
 				Server.Start();
 
@@ -396,13 +396,13 @@ namespace Thing {
 				const std::string endpointName = "Endpoint";
 				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
 				const bool isObservable = true;
-				EndpointMock endpoint;
+				ResourceMock endpoint;
 
-				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointName));
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointName));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, IsObservable()).WillRepeatedly(Return(isObservable));
 
-				Server.AddEndpoint(endpoint);
+				Server.AddResource(endpoint);
 
 				std::vector<uint8_t> responseBuffer;
 				ResourceDiscoveryTest(&responseBuffer);
@@ -430,15 +430,15 @@ namespace Thing {
 				const int totalEndpoints = 10;
 				const std::string endpointBaseName = "Endpoint";
 				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
-				EndpointMock endpoint[totalEndpoints];
+				ResourceMock endpoint[totalEndpoints];
 
 				for (int i = 0; i < totalEndpoints; ++i)
 				{
-					EXPECT_CALL(endpoint[i], GetEndpoint()).WillRepeatedly(Return(endpointBaseName + std::to_string(i)));
+					EXPECT_CALL(endpoint[i], GetName()).WillRepeatedly(Return(endpointBaseName + std::to_string(i)));
 					EXPECT_CALL(endpoint[i], GetContentFormat()).WillRepeatedly(Return(contentFormat));
 					EXPECT_CALL(endpoint[i], IsObservable()).WillRepeatedly(Return(i % 2));
 
-					Server.AddEndpoint(endpoint[i]);
+					Server.AddResource(endpoint[i]);
 				}
 
 				std::vector<uint8_t> responseBuffer;
@@ -459,7 +459,7 @@ namespace Thing {
 				{
 					std::vector<std::string> informations;
 					boost::split(informations, resources[i], boost::is_any_of(";"));
-					EXPECT_EQ("</" + endpoint[i].GetEndpoint() + ">", informations[0]);
+					EXPECT_EQ("</" + endpoint[i].GetName() + ">", informations[0]);
 
 					EXPECT_THAT(informations, Contains("ct=" + std::to_string(static_cast<int>(contentFormat))));
 				}
@@ -520,12 +520,12 @@ namespace Thing {
 				const std::string observePacketPayload = "Observe Test";
 				const int totalNotifications = 5;
 
-				EndpointMock endpoint;
+				ResourceMock endpoint;
 				EXPECT_CALL(endpoint, IsObservable()).WillRepeatedly(Return(true));
-				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
-				Server.AddEndpoint(endpoint);
+				Server.AddResource(endpoint);
 
 				Server.Start();
 
@@ -575,12 +575,12 @@ namespace Thing {
 				const std::string observePacketPayload = "Observe Test";
 				const int totalNotifications = 5;
 
-				EndpointMock endpoint;
+				ResourceMock endpoint;
 				EXPECT_CALL(endpoint, IsObservable()).WillRepeatedly(Return(true));
-				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
-				Server.AddEndpoint(endpoint);
+				Server.AddResource(endpoint);
 
 				Server.Start();
 
@@ -649,15 +649,15 @@ namespace Thing {
 				const int totalNotifications = 5;
 				const int totalEndpoints = 10;
 
-				EndpointMock endpoint[totalEndpoints];
+				ResourceMock endpoint[totalEndpoints];
 
 				for (int i = 0; i < totalEndpoints; ++i)
 				{
 					EXPECT_CALL(endpoint[i], IsObservable()).WillRepeatedly(Return(true));
-					EXPECT_CALL(endpoint[i], GetEndpoint()).WillRepeatedly(Return(endpointPath + std::to_string(i)));
+					EXPECT_CALL(endpoint[i], GetName()).WillRepeatedly(Return(endpointPath + std::to_string(i)));
 					EXPECT_CALL(endpoint[i], GetContentFormat()).WillRepeatedly(Return(contentFormat));
 					EXPECT_CALL(endpoint[i], Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
-					Server.AddEndpoint(endpoint[i]);
+					Server.AddResource(endpoint[i]);
 				}
 				Server.Start();
 
@@ -668,7 +668,7 @@ namespace Thing {
 
 					uint8_t* responseBuffer = NULL;
 					int responseLength = 0;
-					ObserveTest(true, requestIPAddress, requestPort, std::vector<uint8_t>(tokens, tokens + sizeof(tokens)), endpoint[i].GetEndpoint(), &responseBuffer, &responseLength);
+					ObserveTest(true, requestIPAddress, requestPort, std::vector<uint8_t>(tokens, tokens + sizeof(tokens)), endpoint[i].GetName(), &responseBuffer, &responseLength);
 
 					EXPECT_EQ(NULL, responseBuffer);
 					EXPECT_EQ(0, responseLength);
@@ -697,7 +697,7 @@ namespace Thing {
 						std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
 						EXPECT_EQ(2, responseOptions.size());
 
-						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint[j].GetEndpoint().c_str(), endpoint[j].GetEndpoint().size())));
+						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint[j].GetName().c_str(), endpoint[j].GetName().size())));
 						EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
 
 						ASSERT_EQ(observePacket.GetPayload().size(), observePacketPayload.size());
@@ -714,12 +714,12 @@ namespace Thing {
 				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
 				const std::string observePacketPayload = "Observe Test";
 
-				EndpointMock endpoint;
+				ResourceMock endpoint;
 				EXPECT_CALL(endpoint, IsObservable()).WillRepeatedly(Return(true));
-				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
-				Server.AddEndpoint(endpoint);
+				Server.AddResource(endpoint);
 
 				Server.Start();
 
@@ -774,12 +774,12 @@ namespace Thing {
 				const std::string observePacketPayload = "Observe Test";
 				const int totalNotifications = 5;
 
-				EndpointMock endpoint;
+				ResourceMock endpoint;
 				EXPECT_CALL(endpoint, IsObservable()).WillRepeatedly(Return(true));
-				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
-				Server.AddEndpoint(endpoint);
+				Server.AddResource(endpoint);
 
 				Server.Start();
 
@@ -857,15 +857,15 @@ namespace Thing {
 				const int totalNotifications = 5;
 				const int totalEndpoints = 10;
 
-				EndpointMock endpoint[totalEndpoints];
+				ResourceMock endpoint[totalEndpoints];
 
 				for (int i = 0; i < totalEndpoints; ++i)
 				{
 					EXPECT_CALL(endpoint[i], IsObservable()).WillRepeatedly(Return(true));
-					EXPECT_CALL(endpoint[i], GetEndpoint()).WillRepeatedly(Return(endpointPath + std::to_string(i)));
+					EXPECT_CALL(endpoint[i], GetName()).WillRepeatedly(Return(endpointPath + std::to_string(i)));
 					EXPECT_CALL(endpoint[i], GetContentFormat()).WillRepeatedly(Return(contentFormat));
 					EXPECT_CALL(endpoint[i], Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
-					Server.AddEndpoint(endpoint[i]);
+					Server.AddResource(endpoint[i]);
 				}
 				Server.Start();
 
@@ -876,7 +876,7 @@ namespace Thing {
 
 					uint8_t* responseBuffer = NULL;
 					int responseLength = 0;
-					ObserveTest(true, requestIPAddress, requestPort, std::vector<uint8_t>(tokens, tokens + sizeof(tokens)), endpoint[i].GetEndpoint(), &responseBuffer, &responseLength);
+					ObserveTest(true, requestIPAddress, requestPort, std::vector<uint8_t>(tokens, tokens + sizeof(tokens)), endpoint[i].GetName(), &responseBuffer, &responseLength);
 
 					EXPECT_EQ(NULL, responseBuffer);
 					EXPECT_EQ(0, responseLength);
@@ -905,7 +905,7 @@ namespace Thing {
 						std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
 						EXPECT_EQ(2, responseOptions.size());
 
-						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint[j].GetEndpoint().c_str(), endpoint[j].GetEndpoint().size())));
+						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint[j].GetName().c_str(), endpoint[j].GetName().size())));
 						EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
 
 						ASSERT_EQ(observePacket.GetPayload().size(), observePacketPayload.size());
@@ -919,7 +919,7 @@ namespace Thing {
 
 					EXPECT_CALL(endpoint[i], Get(_)).Times(1).WillOnce(Return(Thing::CoAP::Status::Ok()));
 					EXPECT_CALL(udpProviderMock, SendPacket(_, requestIPAddress, requestPort)).Times(1);
-					ObserveTest(false, requestIPAddress, requestPort, std::vector<uint8_t>(tokens, tokens + sizeof(tokens)), endpoint[i].GetEndpoint(), &responseBuffer, &responseLength);
+					ObserveTest(false, requestIPAddress, requestPort, std::vector<uint8_t>(tokens, tokens + sizeof(tokens)), endpoint[i].GetName(), &responseBuffer, &responseLength);
 					EXPECT_CALL(udpProviderMock, SendPacket(_, requestIPAddress, requestPort)).Times(0);
 
 					Server.NotifyObservers(endpoint[i], Thing::CoAP::Status::Ok(observePacketPayload));
@@ -942,12 +942,12 @@ namespace Thing {
 				const int totalNotifications = 5;
 				const int totalObservationRequestSent = 10;
 
-				EndpointMock endpoint;
+				ResourceMock endpoint;
 				EXPECT_CALL(endpoint, IsObservable()).WillRepeatedly(Return(true));
-				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
-				Server.AddEndpoint(endpoint);
+				Server.AddResource(endpoint);
 
 				Server.Start();
 
@@ -998,12 +998,12 @@ namespace Thing {
 				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
 				const std::string observePacketPayload = "Observe Test";
 
-				EndpointMock endpoint;
+				ResourceMock endpoint;
 				EXPECT_CALL(endpoint, IsObservable()).WillRepeatedly(Return(false));
-				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
-				Server.AddEndpoint(endpoint);
+				Server.AddResource(endpoint);
 
 				Server.Start();
 
@@ -1067,12 +1067,12 @@ namespace Thing {
 				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
 				const std::string observePacketPayload = "Observe Test";
 
-				EndpointMock endpoint;
+				ResourceMock endpoint;
 				EXPECT_CALL(endpoint, IsObservable()).WillRepeatedly(Return(false));
-				EXPECT_CALL(endpoint, GetEndpoint()).WillRepeatedly(Return(endpointPath));
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointPath));
 				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
 				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Ok(observePacketPayload)));
-				Server.AddEndpoint(endpoint);
+				Server.AddResource(endpoint);
 
 				Server.Start();
 

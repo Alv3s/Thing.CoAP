@@ -27,16 +27,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Thing.CoAP.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Thing.CoAP\ObserveToken.h" />
     <ClInclude Include="Thing.CoAP\IClient.h" />
     <ClInclude Include="Thing.CoAP\IPAddress.h" />
     <ClInclude Include="Thing.CoAP\Client.h" />
     <ClInclude Include="Thing.CoAP\ContentFormat.h" />
-    <ClInclude Include="Thing.CoAP\EndpointBase.h" />
-    <ClInclude Include="Thing.CoAP\FunctionalEndpoint.h" />
+    <ClInclude Include="Thing.CoAP\ResourceBase.h" />
+    <ClInclude Include="Thing.CoAP\FunctionalResource.h" />
     <ClInclude Include="Thing.CoAP\Functions.h" />
-    <ClInclude Include="Thing.CoAP\IEndpoint.h" />
-    <ClInclude Include="Thing.CoAP\IFunctionalEndpoint.h" />
+    <ClInclude Include="Thing.CoAP\IResource.h" />
+    <ClInclude Include="Thing.CoAP\IFunctionalResource.h" />
     <ClInclude Include="Thing.CoAP\IMessageManager.h" />
     <ClInclude Include="Thing.CoAP\IPacketProvider.h" />
     <ClInclude Include="Thing.CoAP\IServer.h" />
@@ -55,10 +63,18 @@
     <ClInclude Include="Thing.CoAP\Status.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Thing.CoAP.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Thing.CoAP\ObserveToken.cpp" />
     <ClCompile Include="Thing.CoAP\Client.cpp" />
-    <ClCompile Include="Thing.CoAP\EndpointBase.cpp" />
-    <ClCompile Include="Thing.CoAP\FunctionalEndpoint.cpp" />
+    <ClCompile Include="Thing.CoAP\ResourceBase.cpp" />
+    <ClCompile Include="Thing.CoAP\FunctionalResource.cpp" />
     <ClCompile Include="Thing.CoAP\MessageManager.cpp" />
     <ClCompile Include="Thing.CoAP\Observer.cpp" />
     <ClCompile Include="Thing.CoAP\Option.cpp" />

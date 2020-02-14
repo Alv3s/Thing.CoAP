@@ -3,7 +3,7 @@
 #include "OptionValue.h"
 #include <stdio.h>
 #include "Functions.h"
-#include "FunctionalEndpoint.h"
+#include "FunctionalResource.h"
 
 namespace Thing {
 	namespace CoAP
@@ -31,32 +31,32 @@ namespace Thing {
 		}
 
 #pragma region Endpoint Management
-		IFunctionalEndpoint& Server::CreateEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool IsObservable)
+		IFunctionalResource& Server::CreateResource(std::string name, Thing::CoAP::ContentFormat content, bool IsObservable)
 		{
-			FunctionalEndpoint* endpoint = new FunctionalEndpoint(name, content, IsObservable);
-			AddEndpoint(endpoint);
+			FunctionalResource* endpoint = new FunctionalResource(name, content, IsObservable);
+			AddResource(endpoint);
 			return *endpoint;
 		}
 
-		void Server::AddEndpoint(Thing::CoAP::IEndpoint* endpoint)
+		void Server::AddResource(Thing::CoAP::IResource* endpoint)
 		{
-			endpoints[endpoint->GetEndpoint()] = endpoint;
+			endpoints[endpoint->GetName()] = endpoint;
 			endpoint->SetServer(this);
 		}
 
-		void Server::AddEndpoint(Thing::CoAP::IEndpoint& endpoint)
+		void Server::AddResource(Thing::CoAP::IResource& endpoint)
 		{
-			AddEndpoint(&endpoint);
+			AddResource(&endpoint);
 		}
 
-		void Server::RemoveEndpoint(Thing::CoAP::IEndpoint* endpoint)
+		void Server::RemoveResource(Thing::CoAP::IResource* endpoint)
 		{
-			endpoints.erase(endpoint->GetEndpoint());
+			endpoints.erase(endpoint->GetName());
 		}
 
-		void Server::RemoveEndpoint(Thing::CoAP::IEndpoint& endpoint)
+		void Server::RemoveResource(Thing::CoAP::IResource& endpoint)
 		{
-			RemoveEndpoint(&endpoint);
+			RemoveResource(&endpoint);
 		}
 #pragma endregion
 
@@ -154,7 +154,7 @@ namespace Thing {
 							break;
 						}
 
-						Thing::CoAP::IEndpoint* endpoint = endpoints[url];
+						Thing::CoAP::IResource* endpoint = endpoints[url];
 						bool observeRequestButEndpointDoesntSupport = false;
 						for (Thing::CoAP::Option& option : request.GetOptions())
 							if (option.GetNumber() == Thing::CoAP::OptionValue::Observe)
@@ -188,7 +188,7 @@ namespace Thing {
 							break;
 						}
 
-						Thing::CoAP::IEndpoint* endpoint = endpoints[url];
+						Thing::CoAP::IResource* endpoint = endpoints[url];
 						Thing::CoAP::Status e = endpoint->Put(request);
 						AddContentFormat(response, endpoint->GetContentFormat());
 						std::string payload = e.GetPayload();
@@ -204,7 +204,7 @@ namespace Thing {
 							break;
 						}
 
-						Thing::CoAP::IEndpoint* endpoint = endpoints[url];
+						Thing::CoAP::IResource* endpoint = endpoints[url];
 						Thing::CoAP::Status e = endpoint->Post(request);
 						AddContentFormat(response, endpoint->GetContentFormat());
 						std::string payload = e.GetPayload();
@@ -220,7 +220,7 @@ namespace Thing {
 							break;
 						}
 
-						Thing::CoAP::IEndpoint* endpoint = endpoints[url];
+						Thing::CoAP::IResource* endpoint = endpoints[url];
 						Thing::CoAP::Status e = endpoint->Delete(request);
 						AddContentFormat(response, endpoint->GetContentFormat());
 						std::string payload = e.GetPayload();
@@ -239,9 +239,9 @@ namespace Thing {
 			}
 		}
 
-		void Server::NotifyObservers(Thing::CoAP::IEndpoint * endpoint, Thing::CoAP::Status r)
+		void Server::NotifyObservers(Thing::CoAP::IResource* endpoint, Thing::CoAP::Status r)
 		{
-			const std::string endpointPath = endpoint->GetEndpoint();
+			const std::string endpointPath = endpoint->GetName();
 
 			Thing::CoAP::Response response;
 			response.SetVersion(1);
@@ -269,7 +269,7 @@ namespace Thing {
 			}
 		}
 
-		void Server::NotifyObservers(Thing::CoAP::IEndpoint & endpoint, Thing::CoAP::Status r)
+		void Server::NotifyObservers(Thing::CoAP::IResource& endpoint, Thing::CoAP::Status r)
 		{
 			NotifyObservers(&endpoint, r);
 		}

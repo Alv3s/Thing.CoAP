@@ -11,10 +11,10 @@ namespace Thing {
 	{
 		class IServer;
 
-		class IEndpoint
+		class IResource
 		{
 		public:
-			virtual std::string GetEndpoint() const = 0;
+			virtual std::string GetName() const = 0;
 			virtual Thing::CoAP::ContentFormat GetContentFormat() const = 0;
 			virtual bool IsObservable() const = 0;
 

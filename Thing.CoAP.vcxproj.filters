@@ -4,16 +4,7 @@
     <ClInclude Include="Thing.CoAP\ContentFormat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Thing.CoAP\EndpointBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Thing.CoAP\FunctionalEndpoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Thing.CoAP\Functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Thing.CoAP\IEndpoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Thing.CoAP\IMessageManager.h">
@@ -58,9 +49,6 @@
     <ClInclude Include="Thing.CoAP\Status.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Thing.CoAP\IFunctionalEndpoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Thing.CoAP\Client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -79,14 +67,23 @@
     <ClInclude Include="Thing.CoAP\Packet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Thing.CoAP\IResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Thing.CoAP\IFunctionalResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Thing.CoAP\ResourceBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Thing.CoAP\FunctionalResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Thing.CoAP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Thing.CoAP\EndpointBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Thing.CoAP\FunctionalEndpoint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Thing.CoAP\MessageManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -112,6 +109,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Thing.CoAP\ObserveToken.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Thing.CoAP\ResourceBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Thing.CoAP\FunctionalResource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Thing.CoAP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,23 +1,23 @@
-#include "EndpointBaseTest.h"
+#include "ResourceBaseTest.h"
 
 using ::testing::_;
 
 namespace Thing {
 	namespace CoAP {
 		namespace Tests {
-			void EndpointBaseTest::SetUp()
+			void ResourceBaseTest::SetUp()
 			{
 
 			}
 
-			void EndpointBaseTest::TearDown()
+			void ResourceBaseTest::TearDown()
 			{
 
 			}
 
-			TEST_F(EndpointBaseTest, ObservableChangedViaReference)
+			TEST_F(ResourceBaseTest, ObservableChangedViaReference)
 			{
-				Thing::CoAP::IEndpoint& iEndpoint = endpoint;
+				Thing::CoAP::IResource& iEndpoint = endpoint;
 				iEndpoint.SetServer(server);
 
 				Thing::CoAP::Status status = Thing::CoAP::Status::Valid();
@@ -25,9 +25,9 @@ namespace Thing {
 				endpoint.ObservableChanged(status);
 			}
 
-			TEST_F(EndpointBaseTest, ObservableChangedViaPointer)
+			TEST_F(ResourceBaseTest, ObservableChangedViaPointer)
 			{
-				Thing::CoAP::IEndpoint& iEndpoint = endpoint;
+				Thing::CoAP::IResource& iEndpoint = endpoint;
 				iEndpoint.SetServer(&server);
 
 				Thing::CoAP::Status status = Thing::CoAP::Status::Valid();
@@ -35,9 +35,9 @@ namespace Thing {
 				endpoint.ObservableChanged(status);
 			}
 
-			TEST_F(EndpointBaseTest, ObservableChangedServerNull)
+			TEST_F(ResourceBaseTest, ObservableChangedServerNull)
 			{
-				Thing::CoAP::IEndpoint& iEndpoint = endpoint;
+				Thing::CoAP::IResource& iEndpoint = endpoint;
 				iEndpoint.SetServer(nullptr);
 
 				Thing::CoAP::Status status = Thing::CoAP::Status::Valid();

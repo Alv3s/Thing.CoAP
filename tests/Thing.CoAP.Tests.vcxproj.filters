@@ -20,15 +20,15 @@
     <ClInclude Include="ServerMock.h">
       <Filter>Mocks</Filter>
     </ClInclude>
-    <ClInclude Include="EndpointBaseMock.h">
-      <Filter>Mocks</Filter>
-    </ClInclude>
-    <ClInclude Include="EndpointMock.h">
-      <Filter>Mocks</Filter>
-    </ClInclude>
-    <ClInclude Include="EndpointBaseTest.h" />
     <ClInclude Include="ClientTest.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="ResourceBaseTest.h" />
+    <ClInclude Include="ResourceBaseMock.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMock.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StatusTest.cpp" />
@@ -38,7 +38,7 @@
     <ClCompile Include="ObserverTest.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
-    <ClCompile Include="EndpointBaseTest.cpp" />
     <ClCompile Include="ClientTest.cpp" />
+    <ClCompile Include="ResourceBaseTest.cpp" />
   </ItemGroup>
 </Project>

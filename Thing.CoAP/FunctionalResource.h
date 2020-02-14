@@ -1,20 +1,20 @@
 #pragma once
 
-#include "EndpointBase.h"
-#include "IFunctionalEndpoint.h"
+#include "ResourceBase.h"
+#include "IFunctionalResource.h"
 
 namespace Thing 
 {
 	namespace CoAP
 	{
 
-		class FunctionalEndpoint : public EndpointBase, public virtual IEndpoint, public virtual IFunctionalEndpoint
+		class FunctionalResource : public ResourceBase, public virtual IResource, public virtual IFunctionalResource
 		{
 		public:
-			FunctionalEndpoint(std::string name, Thing::CoAP::ContentFormat content, bool isObservable);
-			~FunctionalEndpoint();
+			FunctionalResource(std::string name, Thing::CoAP::ContentFormat content, bool isObservable);
+			~FunctionalResource();
 
-			std::string GetEndpoint() const override;
+			std::string GetName() const override;
 			Thing::CoAP::ContentFormat GetContentFormat() const override;
 			bool IsObservable() const override;
 
@@ -23,10 +23,10 @@ namespace Thing
 			Thing::CoAP::Status Put(Thing::CoAP::Request& request) override;
 			Thing::CoAP::Status Delete(Thing::CoAP::Request& request) override;
 
-			FunctionalEndpoint& OnGet(EndpointCallback callback) override;
-			FunctionalEndpoint& OnPost(EndpointCallback callback) override;
-			FunctionalEndpoint& OnPut(EndpointCallback callback) override;
-			FunctionalEndpoint& OnDelete(EndpointCallback callback) override;
+			FunctionalResource& OnGet(EndpointCallback callback) override;
+			FunctionalResource& OnPost(EndpointCallback callback) override;
+			FunctionalResource& OnPut(EndpointCallback callback) override;
+			FunctionalResource& OnDelete(EndpointCallback callback) override;
 		private:
 			const std::string name;
 			const Thing::CoAP::ContentFormat contentFormat;

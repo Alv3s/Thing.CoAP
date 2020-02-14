@@ -2,19 +2,19 @@
 
 #include "gtest/gtest.h"
 #include "ServerMock.h"
-#include "EndpointBaseMock.h"
+#include "ResourceBaseMock.h"
 
 namespace Thing {
 	namespace CoAP {
 		namespace Tests {
-			class EndpointBaseTest : public testing::Test
+			class ResourceBaseTest : public testing::Test
 			{
 			public:
 				void SetUp() override;
 				void TearDown() override;
 
 				ServerMock server;
-				EndpointBaseMock endpoint;
+				ResourceBaseMock endpoint;
 			};
 		}
 	}

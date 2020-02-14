@@ -1,6 +1,6 @@
 #include "Thing.CoAP/Client.cpp"
-#include "Thing.CoAP/EndpointBase.cpp"
-#include "Thing.CoAP/FunctionalEndpoint.cpp"
+#include "Thing.CoAP/ResourceBase.cpp"
+#include "Thing.CoAP/FunctionalResource.cpp"
 #include "Thing.CoAP/MessageManager.cpp"
 #include "Thing.CoAP/Observer.cpp"
 #include "Thing.CoAP/ObserveToken.cpp"

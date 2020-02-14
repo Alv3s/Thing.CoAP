@@ -38,7 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ClientTest.cpp" />
-    <ClCompile Include="EndpointBaseTest.cpp" />
+    <ClCompile Include="ResourceBaseTest.cpp" />
     <ClCompile Include="ObserverTest.cpp" />
     <ClCompile Include="OptionsTest.cpp" />
     <ClCompile Include="PacketTest.cpp" />
@@ -48,9 +48,9 @@
   <ItemGroup>
     <ClInclude Include="ClientTest.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="EndpointBaseMock.h" />
-    <ClInclude Include="EndpointBaseTest.h" />
-    <ClInclude Include="EndpointMock.h" />
+    <ClInclude Include="ResourceBaseMock.h" />
+    <ClInclude Include="ResourceBaseTest.h" />
+    <ClInclude Include="ResourceMock.h" />
     <ClInclude Include="ServerMock.h" />
     <ClInclude Include="ObserverTest.h" />
     <ClInclude Include="OptionsTest.h" />

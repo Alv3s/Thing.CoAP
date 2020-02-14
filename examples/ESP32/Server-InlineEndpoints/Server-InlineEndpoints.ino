@@ -42,7 +42,7 @@ void setup() {
   server.SetPacketProvider(udpProvider);
 
   //Create an endpoint called "LED"
-  server.CreateEndpoint("LED", Thing::CoAP::ContentFormat::TextPlain, true) //True means that this resource is observable
+  server.CreateResource("LED", Thing::CoAP::ContentFormat::TextPlain, true) //True means that this resource is observable
     .OnGet([](Thing::CoAP::Request & request) { //We are here configuring telling our server that, when we receive a "GET" request to this endpoint, run the the following code
       Serial.println("GET Request received for endpoint 'LED'");
 

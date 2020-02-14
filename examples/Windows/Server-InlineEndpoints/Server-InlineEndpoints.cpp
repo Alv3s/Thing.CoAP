@@ -15,7 +15,7 @@ int main()
 	server.SetPacketProvider(packetProvider);
 
 	//Create an "hello world" endpoint
-	auto endpoint = &server.CreateEndpoint("helloworld", Thing::CoAP::ContentFormat::TextPlain, false)
+	auto endpoint = &server.CreateResource("helloworld", Thing::CoAP::ContentFormat::TextPlain, false)
 		.OnGet([](Thing::CoAP::Request& request) {
 			std::vector<uint8_t> payload = request.GetPayload();
 

@@ -2,7 +2,7 @@
 
 #include "gmock/gmock.h"
 #include "../Thing.CoAP/IServer.h"
-#include "../Thing.CoAP/FunctionalEndpoint.h"
+#include "../Thing.CoAP/FunctionalResource.h"
 
 namespace Thing {
 	namespace CoAP {
@@ -13,19 +13,19 @@ namespace Thing {
 				MOCK_METHOD1(SetPort, void(int port));
 				MOCK_METHOD0(GetPort, int());
 
-				MOCK_METHOD3(CreateEndpoint, FunctionalEndpoint& (std::string, Thing::CoAP::ContentFormat, bool));
-				MOCK_METHOD1(AddEndpoint, void(Thing::CoAP::IEndpoint* endpoint));
-				MOCK_METHOD1(AddEndpoint, void(Thing::CoAP::IEndpoint& endpoint));
+				MOCK_METHOD3(CreateResource, FunctionalResource& (std::string, Thing::CoAP::ContentFormat, bool));
+				MOCK_METHOD1(AddResource, void(Thing::CoAP::IResource* endpoint));
+				MOCK_METHOD1(AddResource, void(Thing::CoAP::IResource& endpoint));
 
-				MOCK_METHOD1(RemoveEndpoint, void(Thing::CoAP::IEndpoint* endpoint));
-				MOCK_METHOD1(RemoveEndpoint, void(Thing::CoAP::IEndpoint& endpoint));
+				MOCK_METHOD1(RemoveResource, void(Thing::CoAP::IResource* endpoint));
+				MOCK_METHOD1(RemoveResource, void(Thing::CoAP::IResource& endpoint));
 
 				MOCK_METHOD0(Start, void());
 				MOCK_METHOD0(Process, void());
 				MOCK_METHOD0(Stop, void());
 
-				MOCK_METHOD2(NotifyObservers, void(Thing::CoAP::IEndpoint*, Thing::CoAP::Status));
-				MOCK_METHOD2(NotifyObservers, void(Thing::CoAP::IEndpoint&, Thing::CoAP::Status));
+				MOCK_METHOD2(NotifyObservers, void(Thing::CoAP::IResource*, Thing::CoAP::Status));
+				MOCK_METHOD2(NotifyObservers, void(Thing::CoAP::IResource&, Thing::CoAP::Status));
 			};
 		}
 	}
