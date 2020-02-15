@@ -32,14 +32,14 @@ namespace Thing {
 			return code;
 		}
 
-		Status Status::Ok(std::string payload)
+		Status Status::Content(std::string payload)
 		{
-			return Status(payload, Thing::CoAP::ResponseCode::Ok);
+			return Status(payload, Thing::CoAP::ResponseCode::Content);
 		}
 
-		Thing::CoAP::Status Status::Ok()
+		Thing::CoAP::Status Status::Content()
 		{
-			return Status(Thing::CoAP::ResponseCode::Ok);
+			return Status(Thing::CoAP::ResponseCode::Content);
 		}
 
 		Thing::CoAP::Status Status::BadRequest()

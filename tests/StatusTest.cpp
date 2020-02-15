@@ -16,32 +16,32 @@ namespace Thing {
 
 			TEST_F(StatusTest, OperatorsTest)
 			{
-				Thing::CoAP::Status status = Thing::CoAP::Status::Ok();
-				Thing::CoAP::Status status1 = Thing::CoAP::Status::Ok();
+				Thing::CoAP::Status status = Thing::CoAP::Status::Content();
+				Thing::CoAP::Status status1 = Thing::CoAP::Status::Content();
 				EXPECT_EQ(status, status1);
 
-				Thing::CoAP::Status status2 = Thing::CoAP::Status::Ok("test");
+				Thing::CoAP::Status status2 = Thing::CoAP::Status::Content("test");
 				EXPECT_NE(status, status2);
 
 				Thing::CoAP::Status status3 = Thing::CoAP::Status::BadRequest();
 				EXPECT_NE(status, status3);
 			}
 
-			TEST_F(StatusTest, OKStatusWithoutPayload)
+			TEST_F(StatusTest, ContentStatusWithoutPayload)
 			{
-				Thing::CoAP::Status status = Thing::CoAP::Status::Ok();
+				Thing::CoAP::Status status = Thing::CoAP::Status::Content();
 
 				EXPECT_EQ(0, status.GetPayload().size());
-				EXPECT_EQ(Thing::CoAP::ResponseCode::Ok, status.GetCode());
+				EXPECT_EQ(Thing::CoAP::ResponseCode::Content, status.GetCode());
 			}
 
-			TEST_F(StatusTest, OKStatusWithPayload)
+			TEST_F(StatusTest, ContentStatusWithPayload)
 			{
 				const std::string payload = "ABCDEFG";
-				Thing::CoAP::Status status = Thing::CoAP::Status::Ok(payload);
+				Thing::CoAP::Status status = Thing::CoAP::Status::Content(payload);
 
 				EXPECT_EQ(payload, status.GetPayload());
-				EXPECT_EQ(Thing::CoAP::ResponseCode::Ok, status.GetCode());
+				EXPECT_EQ(Thing::CoAP::ResponseCode::Content, status.GetCode());
 			}
 
 			TEST_F(StatusTest, CreatedStatus)

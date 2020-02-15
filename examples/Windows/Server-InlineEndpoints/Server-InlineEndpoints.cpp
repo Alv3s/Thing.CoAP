@@ -15,21 +15,21 @@ int main()
 	server.SetPacketProvider(packetProvider);
 
 	//Create an "hello world" endpoint
-	auto endpoint = &server.CreateResource("helloworld", Thing::CoAP::ContentFormat::TextPlain, false)
+	auto endpoint = &server.CreateResource("helloworld", Thing::CoAP::ContentFormat::TextPlain, true)
 		.OnGet([](Thing::CoAP::Request& request) {
 			std::vector<uint8_t> payload = request.GetPayload();
 
 			std::string received(payload.begin(), payload.end());
 			std::cout << "Client sent: " << received << std::endl;
 
-			return Thing::CoAP::Status::Ok("Hello World!");
+			return Thing::CoAP::Status::Content("Hello World!");
 		}).OnPost([](Thing::CoAP::Request& request) {
 			std::vector<uint8_t> payload = request.GetPayload();
 
 			std::string received(payload.begin(), payload.end());
 			std::cout << "Client sent: " << received << std::endl;
 
-			return Thing::CoAP::Status::Ok("Hello From The Server! The message you sent was:" + received);
+			return Thing::CoAP::Status::Content("Hello From The Server! The message you sent was:" + received);
 		});
 
 		server.Start();
@@ -38,7 +38,7 @@ int main()
 			for (;;)
 			{
 				int randomSleep = rand() % 5000 + 1000;
-				endpoint->ObservableChanged(Thing::CoAP::Status::Ok("Hello Clients! Next message is going to be sent in " + std::to_string(randomSleep) + "ms"));
+				endpoint->ObservableChanged(Thing::CoAP::Status::Content("Hello Clients! Next message is going to be sent in " + std::to_string(randomSleep) + "ms"));
 				Sleep(randomSleep);
 			}
 		});

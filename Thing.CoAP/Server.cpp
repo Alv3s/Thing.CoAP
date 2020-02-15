@@ -13,11 +13,37 @@ namespace Thing {
 			uint8_t optionBuffer[2];
 			optionBuffer[0] = (static_cast<uint16_t>(format) & 0xFF00) >> 8;
 			optionBuffer[1] = (static_cast<uint16_t>(format) & 0x00FF);
+
 			std::vector<Thing::CoAP::Option>& options = response.GetOptions();
 			Thing::CoAP::Option option;
 			option.SetNumber(Thing::CoAP::OptionValue::ContentFormat);
 			option.SetOption(optionBuffer, 2);
 			options.push_back(option);
+		}
+
+		static void AddObserveOption(Thing::CoAP::Response& response, Thing::CoAP::Observer& obs)
+		{
+			uint16_t obsCount = obs.NextCount();
+			uint8_t optionBuffer[2];
+			optionBuffer[0] = (static_cast<uint16_t>(obsCount) & 0xFF00) >> 8;
+			optionBuffer[1] = (static_cast<uint16_t>(obsCount) & 0x00FF);
+
+			std::vector<Thing::CoAP::Option>& options = response.GetOptions();
+
+			Thing::CoAP::Option observeOption;
+			observeOption.SetNumber(Thing::CoAP::OptionValue::Observe);
+			observeOption.SetOption(optionBuffer, 2);
+			options.push_back(observeOption);
+		}
+
+		static void AddURIOption(Thing::CoAP::Response& response, std::string name)
+		{
+			std::vector<Thing::CoAP::Option>& options = response.GetOptions();
+
+			Thing::CoAP::Option uriOption;
+			uriOption.SetOption((uint8_t*)name.c_str(), static_cast<int>(name.size()));
+			uriOption.SetNumber(Thing::CoAP::OptionValue::URIPath);
+			options.push_back(uriOption);
 		}
 
 		Server::Server() : 
@@ -123,7 +149,7 @@ namespace Thing {
 					}
 					else if (request.GetType() == Thing::CoAP::MessageType::Reset)
 					{
-						Thing::CoAP::Observer observer(address, port);
+						Thing::CoAP::Observer observer(address, port, Thing::CoAP::Functions::GenerateMessageID());
 						removeObserver(url, observer);
 					}
 					break;
@@ -165,11 +191,14 @@ namespace Thing {
 									break;
 								}
 
-								Thing::CoAP::Observer obs(address, port, request.GetTokens());
+								Thing::CoAP::Observer obs(address, port, Thing::CoAP::Functions::GenerateMessageID(), request.GetTokens());
 								if (option.GetLenght() > 0 && option.GetBuffer()[0] == 1)
 									removeObserver(url, obs);
 								else
+								{
+									AddObserveOption(response, obs);
 									addObserver(url, obs);
+								}
 								break;
 							}
 						
@@ -245,23 +274,20 @@ namespace Thing {
 
 			Thing::CoAP::Response response;
 			response.SetVersion(1);
-			response.SetMessageID(Thing::CoAP::Functions::GenerateMessageID());
 			response.SetType(Thing::CoAP::MessageType::Confirmable);
 			response.SetCode(static_cast<uint8_t>(Thing::CoAP::ResponseCode::Content));
 			std::string buffer = r.GetPayload();
 			response.SetPayload((uint8_t*)buffer.c_str(), static_cast<int>(buffer.size()));
 
-			std::vector<Thing::CoAP::Option> options;
-			Thing::CoAP::Option option;
-			option.SetOption((uint8_t*)endpointPath.c_str(), static_cast<int>(endpointPath.size()));
-			option.SetNumber(Thing::CoAP::OptionValue::URIPath);
-			options.push_back(option);
-			response.SetOptions(options);
-
-			AddContentFormat(response, endpoint->GetContentFormat());
-
 			for (Thing::CoAP::Observer& obs : observers[endpointPath])
 			{
+				response.SetMessageID(obs.NextMessageID());
+
+				response.SetOptions(std::vector<Thing::CoAP::Option>());
+				AddObserveOption(response, obs);
+				AddURIOption(response, endpointPath);
+				AddContentFormat(response, endpoint->GetContentFormat());
+
 				response.SetTokens(obs.GetTokens());
 
 				std::vector<uint8_t> payload = response.SerializePacket();
@@ -311,7 +337,8 @@ namespace Thing {
 
 				result += "</" + e.first + ">";
 				result += ";if=\"" + e.first + "\"";
-				result += ";rt=\"observer\"";
+				if (e.second->IsObservable())
+					result += ";obs";
 				result += ";ct=" + std::string(ct);
 				++i;
 			}

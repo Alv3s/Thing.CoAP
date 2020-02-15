@@ -4,7 +4,6 @@ namespace Thing {
 	namespace CoAP {
 		enum class ResponseCode {
 			EmptyMessage = 0,
-			Ok = 64,
 			Created = 65,
 			Deleted = 66,
 			Valid = 67,

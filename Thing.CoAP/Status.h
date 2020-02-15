@@ -15,8 +15,8 @@ namespace Thing {
 			std::string GetPayload() const;
 			Thing::CoAP::ResponseCode GetCode() const;
 
-			static Thing::CoAP::Status Ok(std::string payload);
-			static Thing::CoAP::Status Ok();
+			static Thing::CoAP::Status Content(std::string payload);
+			static Thing::CoAP::Status Content();
 			static Thing::CoAP::Status BadRequest();
 			static Thing::CoAP::Status MethodNotAllowed();
 			static Thing::CoAP::Status InternalServerError();
