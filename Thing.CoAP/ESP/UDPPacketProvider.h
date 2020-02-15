@@ -20,7 +20,11 @@ namespace Thing
 				void Start(int port) override 
 				{
 					::IPAddress multicastAddress(224, 0, 1, 187);
+#ifdef ESP8266
 					Udp.beginMulticast(WiFi.localIP(), multicastAddress, port);
+#else
+					Udp.beginMulticast(multicastAddress, port);
+#endif
 					Udp.begin(port);
 				}
 				
@@ -32,7 +36,11 @@ namespace Thing
 				void SendPacket(std::vector<uint8_t> buffer, Thing::CoAP::IPAddress ip, int port) override
 				{
 					if(ip & 0xE0000000) //If is multicast
+#ifdef ESP8266
 						Udp.beginPacketMulticast(ip, port, WiFi.localIP());
+#else
+						Udp.beginMulticastPacket();
+#endif
 					else
 						Udp.beginPacket(ip, port);
 						
