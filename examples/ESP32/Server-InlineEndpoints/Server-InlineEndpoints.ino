@@ -41,7 +41,7 @@ void setup() {
   //Configure our server to use our packet handler (It will use UDP)
   server.SetPacketProvider(udpProvider);
 
-  //Create an endpoint called "LED"
+  //Create an resource called "LED"
   server.CreateResource("LED", Thing::CoAP::ContentFormat::TextPlain, true) //True means that this resource is observable
     .OnGet([](Thing::CoAP::Request & request) { //We are here configuring telling our server that, when we receive a "GET" request to this endpoint, run the the following code
       Serial.println("GET Request received for endpoint 'LED'");
@@ -54,7 +54,7 @@ void setup() {
         result = "Off";
 
        //Return the current state of our "LED".
-      return Thing::CoAP::Status::Ok(result);
+      return Thing::CoAP::Status::Content(result);
     }).OnPost([](Thing::CoAP::Request& request) {  //We are here configuring telling our server that, when we receive a "POST" request to this endpoint, run the the following code
       Serial.println("POST Request received for endpoint 'LED'");
 
@@ -74,11 +74,11 @@ void setup() {
       }
 
       //In case "On" or "Off" was received, we will return "Ok" with a message saying "Command Executed".
-      return Thing::CoAP::Status::Ok("Command Executed");
+      return Thing::CoAP::Status::Content("Command Executed");
     });
 
-  //Create an endpoint called "Button"
-  server.CreateEndpoint("Button", Thing::CoAP::ContentFormat::TextPlain, false)
+  //Create an resource called "Button"
+  server.CreateResource("Button", Thing::CoAP::ContentFormat::TextPlain, false)
     .OnGet([](Thing::CoAP::Request & request) { //We are here configuring telling our server that, when we receive a "GET" request to this endpoint, run the the following code
       Serial.println("GET Request received for endpoint 'Button'");
 
@@ -90,7 +90,7 @@ void setup() {
         result = "Off";
 
        //Return the current state of our "LED".
-      return Thing::CoAP::Status::Ok(result);
+      return Thing::CoAP::Status::Content(result);
     });
 
     server.Start();

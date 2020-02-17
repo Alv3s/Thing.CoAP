@@ -166,6 +166,31 @@
       <Project>{76fe1271-8874-4307-b5b0-96af71df3da3}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\Client\BuildArduinoExamples.i">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">docker build -t thing.coap - &lt; $(SolutionDir)Docker\Arduino.Dockerfile
+docker run -v"$(SolutionDir.TrimEnd('\'))":/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp8266:esp8266:generic /root/Arduino/libraries/Thing.CoAP/examples/ESP8266/$(ProjectName)
+docker run -v"$(SolutionDir.TrimEnd('\'))":/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp32:esp32:esp32 /root/Arduino/libraries/Thing.CoAP/examples/ESP32/$(ProjectName)
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">docker build -t thing.coap - &lt; $(SolutionDir)Docker\Arduino.Dockerfile
+docker run -v"$(SolutionDir.TrimEnd('\'))":/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp8266:esp8266:generic /root/Arduino/libraries/Thing.CoAP/examples/ESP8266/$(ProjectName)
+docker run -v"$(SolutionDir.TrimEnd('\'))":/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp32:esp32:esp32 /root/Arduino/libraries/Thing.CoAP/examples/ESP32/$(ProjectName)
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">docker build -t thing.coap - &lt; $(SolutionDir)Docker\Arduino.Dockerfile
+docker run -v"$(SolutionDir.TrimEnd('\'))":/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp8266:esp8266:generic /root/Arduino/libraries/Thing.CoAP/examples/ESP8266/$(ProjectName)
+docker run -v"$(SolutionDir.TrimEnd('\'))":/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp32:esp32:esp32 /root/Arduino/libraries/Thing.CoAP/examples/ESP32/$(ProjectName)
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">docker build -t thing.coap - &lt; $(SolutionDir)Docker\Arduino.Dockerfile
+docker run -v"$(SolutionDir.TrimEnd('\'))":/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp8266:esp8266:generic /root/Arduino/libraries/Thing.CoAP/examples/ESP8266/$(ProjectName)
+docker run -v"$(SolutionDir.TrimEnd('\'))":/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp32:esp32:esp32 /root/Arduino/libraries/Thing.CoAP/examples/ESP32/$(ProjectName)
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.bin;$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.bin;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.partitions;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.bin;$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.bin;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.partitions;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.bin;$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.bin;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.partitions;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.bin;$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.bin;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.partitions;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

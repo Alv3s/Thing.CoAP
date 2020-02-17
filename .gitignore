@@ -342,3 +342,7 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+/examples/ESP32/Client/Client.*.*
+/examples/ESP8266/Client/Client.*.*
+/examples/ESP32/Server-InlineEndpoints/Server-InlineEndpoints.*.*
+/examples/ESP8266/Server-InlineEndpoints/Server-InlineEndpoints.*.*
