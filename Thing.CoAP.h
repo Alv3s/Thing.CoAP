@@ -26,5 +26,5 @@
 #include "Thing.CoAP/ResponseCode.h"
 #include "Thing.CoAP/Server.h"
 #include "Thing.CoAP/Status.h"
-
+#include "Thing.CoAP/WebLink.h"
 #include "Thing.CoAP/ESP/UDPPacketProvider.h"

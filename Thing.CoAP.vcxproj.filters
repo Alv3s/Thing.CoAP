@@ -82,6 +82,9 @@
     <ClInclude Include="Thing.CoAP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Thing.CoAP\WebLink.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Thing.CoAP\MessageManager.cpp">
@@ -118,6 +121,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Thing.CoAP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Thing.CoAP\WebLink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

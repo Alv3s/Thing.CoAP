@@ -5,13 +5,15 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Thing.CoAP", "Thing.CoAP.vcxproj", "{76FE1271-8874-4307-B5B0-96AF71DF3DA3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Thing.CoAP.Tests", "Tests\Thing.CoAP.Tests.vcxproj", "{97FE8769-4780-4CDA-AFD8-912B6FC47CA2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Thing.CoAP.Tests", "tests\Thing.CoAP.Tests.vcxproj", "{97FE8769-4780-4CDA-AFD8-912B6FC47CA2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server-InlineEndpoints", "examples\Windows\Server-InlineEndpoints\Server-InlineEndpoints.vcxproj", "{915719BD-CFB9-4AB7-BEE4-795F91F50EDD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "examples\Windows\Client\Client.vcxproj", "{78999EAC-3572-481B-9FA8-D1299742891C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F336A719-2F3F-4AC7-809C-87EB947EE9E6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client-Discovery", "examples\Windows\Client-Discovery\Client-Discovery.vcxproj", "{333F5338-289D-4373-AF65-971B02F42211}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,14 @@ Global
 		{78999EAC-3572-481B-9FA8-D1299742891C}.Release|x64.Build.0 = Release|x64
 		{78999EAC-3572-481B-9FA8-D1299742891C}.Release|x86.ActiveCfg = Release|Win32
 		{78999EAC-3572-481B-9FA8-D1299742891C}.Release|x86.Build.0 = Release|Win32
+		{333F5338-289D-4373-AF65-971B02F42211}.Debug|x64.ActiveCfg = Debug|x64
+		{333F5338-289D-4373-AF65-971B02F42211}.Debug|x64.Build.0 = Debug|x64
+		{333F5338-289D-4373-AF65-971B02F42211}.Debug|x86.ActiveCfg = Debug|Win32
+		{333F5338-289D-4373-AF65-971B02F42211}.Debug|x86.Build.0 = Debug|Win32
+		{333F5338-289D-4373-AF65-971B02F42211}.Release|x64.ActiveCfg = Release|x64
+		{333F5338-289D-4373-AF65-971B02F42211}.Release|x64.Build.0 = Release|x64
+		{333F5338-289D-4373-AF65-971B02F42211}.Release|x86.ActiveCfg = Release|Win32
+		{333F5338-289D-4373-AF65-971B02F42211}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +70,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{915719BD-CFB9-4AB7-BEE4-795F91F50EDD} = {F336A719-2F3F-4AC7-809C-87EB947EE9E6}
 		{78999EAC-3572-481B-9FA8-D1299742891C} = {F336A719-2F3F-4AC7-809C-87EB947EE9E6}
+		{333F5338-289D-4373-AF65-971B02F42211} = {F336A719-2F3F-4AC7-809C-87EB947EE9E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8CA562F3-15A5-4997-8C04-0F6C0870E933}

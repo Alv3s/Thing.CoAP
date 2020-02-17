@@ -8,3 +8,4 @@
 #include "Thing.CoAP/Packet.cpp"
 #include "Thing.CoAP/Server.cpp"
 #include "Thing.CoAP/Status.cpp"
+#include "Thing.CoAP/WebLink.cpp"
