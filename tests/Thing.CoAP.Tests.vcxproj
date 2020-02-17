@@ -44,6 +44,7 @@
     <ClCompile Include="PacketTest.cpp" />
     <ClCompile Include="ServerTest.cpp" />
     <ClCompile Include="StatusTest.cpp" />
+    <ClCompile Include="WebLinkTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientTest.h" />
@@ -58,6 +59,7 @@
     <ClInclude Include="ServerTest.h" />
     <ClInclude Include="StatusTest.h" />
     <ClInclude Include="PacketProviderMock.h" />
+    <ClInclude Include="WebLinkTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Thing.CoAP.vcxproj">

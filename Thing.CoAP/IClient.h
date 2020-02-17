@@ -18,6 +18,9 @@ namespace Thing
 			virtual void SetPacketProvider(IPacketProvider* packetProvider) = 0;
 			virtual void SetPacketProvider(IPacketProvider& packetProvider) = 0;
 
+			virtual void Discover(ResponseCallback callback) = 0;
+
+			virtual void Get(std::string endpoint, ResponseCallback callback) = 0;
 			virtual void Get(std::string endpoint, std::vector<uint8_t> payload, ResponseCallback callback) = 0;
 			virtual void Get(std::string endpoint, std::string payload, ResponseCallback callback) = 0;
 

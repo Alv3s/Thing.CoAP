@@ -335,10 +335,32 @@ namespace Thing {
 				char ct[3];
 				sprintf(ct, "%d", static_cast<int>(e.second->GetContentFormat()));
 
+				std::string resourceType = e.second->GetResourceType();
+				std::string interfaceDescription = e.second->GetInterfaceDescription();
+				std::string title = e.second->GetTitle();
+				size_t maximumSizeEstimate = e.second->GetMaximumSizeEstimate();
+
 				result += "</" + e.first + ">";
-				result += ";if=\"" + e.first + "\"";
+
+				if(interfaceDescription != "")
+					result += ";if=\"" + interfaceDescription + "\"";
+				
+				if(resourceType != "")
+					result += ";rt=\"" + resourceType + "\"";
+
 				if (e.second->IsObservable())
 					result += ";obs";
+
+				if(title != "")
+					result += ";title=\"" + title + "\"";
+
+				if (maximumSizeEstimate != 0)
+				{
+					char buffer[20];
+					sprintf(buffer, ";sz=%zu", maximumSizeEstimate);
+					result += std::string(buffer);
+				}
+				
 				result += ";ct=" + std::string(ct);
 				++i;
 			}

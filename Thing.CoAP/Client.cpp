@@ -53,6 +53,16 @@ namespace Thing
 			SetPacketProvider(&packetProvider);
 		}
 
+		void Client::Discover(ResponseCallback callback)
+		{
+			Get(".well-known/core", callback);
+		}
+
+		void Client::Get(std::string endpoint, ResponseCallback callback)
+		{
+			Request(endpoint, Thing::CoAP::Method::Get, std::vector<uint8_t>(), callback);
+		}
+
 		void Client::Get(std::string endpoint, std::vector<uint8_t> payload, ResponseCallback callback)
 		{
 			Request(endpoint, Thing::CoAP::Method::Get, payload, callback);

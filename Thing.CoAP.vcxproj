@@ -61,6 +61,7 @@
     <ClInclude Include="Thing.CoAP\ResponseCode.h" />
     <ClInclude Include="Thing.CoAP\Server.h" />
     <ClInclude Include="Thing.CoAP\Status.h" />
+    <ClInclude Include="Thing.CoAP\WebLink.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Thing.CoAP.cpp">
@@ -81,6 +82,7 @@
     <ClCompile Include="Thing.CoAP\Packet.cpp" />
     <ClCompile Include="Thing.CoAP\Server.cpp" />
     <ClCompile Include="Thing.CoAP\Status.cpp" />
+    <ClCompile Include="Thing.CoAP\WebLink.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Thing.CoAP\README.md" />

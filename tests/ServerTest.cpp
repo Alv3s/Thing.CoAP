@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 #include "Common.h"
+#include "../Thing.CoAP/WebLink.h"
 
 using ::testing::Matches;
 using ::testing::Return;
@@ -392,6 +393,250 @@ namespace Thing {
 				EXPECT_EQ(0, response.GetPayload().size());
 			}
 
+			TEST_F(ServerTest, ResourceDiscoverySimpleTest_InterfaceDescription)
+			{
+				const std::string endpointName = "Endpoint";
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				const std::string interfaceDescription = "Some Description";
+				ResourceMock endpoint;
+
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointName));
+				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
+				EXPECT_CALL(endpoint, GetInterfaceDescription()).WillRepeatedly(Return(interfaceDescription));
+
+				Server.AddResource(endpoint);
+
+				std::vector<uint8_t> responseBuffer;
+				ResourceDiscoveryTest(&responseBuffer);
+
+				Thing::CoAP::Packet response;
+				response.DesserializePacket(responseBuffer);
+
+				EXPECT_NE(0, response.GetPayload().size());
+
+				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
+
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(1, links.size());
+
+				EXPECT_EQ(endpointName, links.begin()->GetURI());
+				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
+				ASSERT_TRUE(links.begin()->HasInterfaceDescription());
+				EXPECT_EQ(interfaceDescription, links.begin()->GetInterfaceDescription());
+			}
+
+			TEST_F(ServerTest, ResourceDiscoverySimpleTest_NoInterfaceDescription)
+			{
+				const std::string endpointName = "Endpoint";
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				ResourceMock endpoint;
+
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointName));
+				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
+
+				Server.AddResource(endpoint);
+
+				std::vector<uint8_t> responseBuffer;
+				ResourceDiscoveryTest(&responseBuffer);
+
+				Thing::CoAP::Packet response;
+				response.DesserializePacket(responseBuffer);
+
+				EXPECT_NE(0, response.GetPayload().size());
+
+				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
+
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(1, links.size());
+
+				EXPECT_EQ(endpointName, links.begin()->GetURI());
+				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
+				ASSERT_FALSE(links.begin()->HasInterfaceDescription());
+			}
+
+			TEST_F(ServerTest, ResourceDiscoverySimpleTest_ResourceType)
+			{
+				const std::string endpointName = "Endpoint";
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				const std::string resourceType = "Some Resource Type";
+				ResourceMock endpoint;
+
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointName));
+				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
+				EXPECT_CALL(endpoint, GetResourceType()).WillRepeatedly(Return(resourceType));
+
+				Server.AddResource(endpoint);
+
+				std::vector<uint8_t> responseBuffer;
+				ResourceDiscoveryTest(&responseBuffer);
+
+				Thing::CoAP::Packet response;
+				response.DesserializePacket(responseBuffer);
+
+				EXPECT_NE(0, response.GetPayload().size());
+
+				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
+
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(1, links.size());
+
+				EXPECT_EQ(endpointName, links.begin()->GetURI());
+				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
+				ASSERT_TRUE(links.begin()->HasResourceType());
+				EXPECT_EQ(resourceType, links.begin()->GetResourceType());
+			}
+
+			TEST_F(ServerTest, ResourceDiscoverySimpleTest_NoResourceType)
+			{
+				const std::string endpointName = "Endpoint";
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				ResourceMock endpoint;
+
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointName));
+				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
+
+				Server.AddResource(endpoint);
+
+				std::vector<uint8_t> responseBuffer;
+				ResourceDiscoveryTest(&responseBuffer);
+
+				Thing::CoAP::Packet response;
+				response.DesserializePacket(responseBuffer);
+
+				EXPECT_NE(0, response.GetPayload().size());
+
+				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
+
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(1, links.size());
+
+				EXPECT_EQ(endpointName, links.begin()->GetURI());
+				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
+				ASSERT_FALSE(links.begin()->HasResourceType());
+			}
+
+			TEST_F(ServerTest, ResourceDiscoverySimpleTest_Title)
+			{
+				const std::string endpointName = "Endpoint";
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				const std::string title = "Some Title";
+				ResourceMock endpoint;
+
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointName));
+				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
+				EXPECT_CALL(endpoint, GetTitle()).WillRepeatedly(Return(title));
+
+				Server.AddResource(endpoint);
+
+				std::vector<uint8_t> responseBuffer;
+				ResourceDiscoveryTest(&responseBuffer);
+
+				Thing::CoAP::Packet response;
+				response.DesserializePacket(responseBuffer);
+
+				EXPECT_NE(0, response.GetPayload().size());
+
+				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
+
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(1, links.size());
+
+				EXPECT_EQ(endpointName, links.begin()->GetURI());
+				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
+				ASSERT_TRUE(links.begin()->HasTitle());
+				EXPECT_EQ(title, links.begin()->GetTitle());
+			}
+
+			TEST_F(ServerTest, ResourceDiscoverySimpleTest_NoTitle)
+			{
+				const std::string endpointName = "Endpoint";
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				ResourceMock endpoint;
+
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointName));
+				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
+
+				Server.AddResource(endpoint);
+
+				std::vector<uint8_t> responseBuffer;
+				ResourceDiscoveryTest(&responseBuffer);
+
+				Thing::CoAP::Packet response;
+				response.DesserializePacket(responseBuffer);
+
+				EXPECT_NE(0, response.GetPayload().size());
+
+				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
+
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(1, links.size());
+
+				EXPECT_EQ(endpointName, links.begin()->GetURI());
+				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
+				ASSERT_FALSE(links.begin()->HasTitle());
+			}
+
+			TEST_F(ServerTest, ResourceDiscoverySimpleTest_MaximumSizeEstimate)
+			{
+				const std::string endpointName = "Endpoint";
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				const size_t maximumSizeEstimate = 10;
+				ResourceMock endpoint;
+
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointName));
+				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
+				EXPECT_CALL(endpoint, GetMaximumSizeEstimate()).WillRepeatedly(Return(maximumSizeEstimate));
+
+				Server.AddResource(endpoint);
+
+				std::vector<uint8_t> responseBuffer;
+				ResourceDiscoveryTest(&responseBuffer);
+
+				Thing::CoAP::Packet response;
+				response.DesserializePacket(responseBuffer);
+
+				EXPECT_NE(0, response.GetPayload().size());
+
+				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
+
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(1, links.size());
+
+				EXPECT_EQ(endpointName, links.begin()->GetURI());
+				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
+				ASSERT_TRUE(links.begin()->HasMaximumSizeEstimate());
+				EXPECT_EQ(maximumSizeEstimate, links.begin()->GetMaximumSizeEstimate());
+			}
+
+			TEST_F(ServerTest, ResourceDiscoverySimpleTest_NoMaximumSizeEstimate)
+			{
+				const std::string endpointName = "Endpoint";
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				ResourceMock endpoint;
+
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointName));
+				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
+
+				Server.AddResource(endpoint);
+
+				std::vector<uint8_t> responseBuffer;
+				ResourceDiscoveryTest(&responseBuffer);
+
+				Thing::CoAP::Packet response;
+				response.DesserializePacket(responseBuffer);
+
+				EXPECT_NE(0, response.GetPayload().size());
+
+				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
+
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(1, links.size());
+
+				EXPECT_EQ(endpointName, links.begin()->GetURI());
+				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
+				ASSERT_FALSE(links.begin()->HasMaximumSizeEstimate());
+			}
+
 			TEST_F(ServerTest, ResourceDiscoverySimpleTest_Observable)
 			{
 				const std::string endpointName = "Endpoint";
@@ -415,16 +660,12 @@ namespace Thing {
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
-				std::vector<std::string> resources;
-				boost::split(resources, payload, boost::is_any_of(","));
-				EXPECT_EQ(1, resources.size());
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(1, links.size());
 
-				std::vector<std::string> informations;
-				boost::split(informations, resources[0], boost::is_any_of(";"));
-				EXPECT_EQ("</" + endpointName + ">", informations[0]);
-
-				EXPECT_THAT(informations, Contains("ct=" + std::to_string(static_cast<int>(contentFormat))));
-				EXPECT_THAT(informations, Contains("obs"));
+				EXPECT_EQ(endpointName, links.begin()->GetURI());
+				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
+				EXPECT_TRUE(links.begin()->IsObservable());
 			}
 
 			TEST_F(ServerTest, ResourceDiscoverySimpleTest_NotObservable)
@@ -450,16 +691,12 @@ namespace Thing {
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
-				std::vector<std::string> resources;
-				boost::split(resources, payload, boost::is_any_of(","));
-				EXPECT_EQ(1, resources.size());
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(1, links.size());
 
-				std::vector<std::string> informations;
-				boost::split(informations, resources[0], boost::is_any_of(";"));
-				EXPECT_EQ("</" + endpointName + ">", informations[0]);
-
-				EXPECT_THAT(informations, Contains("ct=" + std::to_string(static_cast<int>(contentFormat))));
-				EXPECT_THAT(informations, Not(Contains("obs")));
+				EXPECT_EQ(endpointName, links.begin()->GetURI());
+				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
+				EXPECT_FALSE(links.begin()->IsObservable());
 			}
 
 			TEST_F(ServerTest, ResourceDiscoveryMultipleTest)
@@ -488,17 +725,14 @@ namespace Thing {
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
-				std::vector<std::string> resources;
-				boost::split(resources, payload, boost::is_any_of(","));
-				EXPECT_EQ(totalEndpoints, resources.size());
-
-				for (int i = 0; i < totalEndpoints; ++i)
+				std::list<WebLink> links = WebLink::ParseString(payload);
+				EXPECT_EQ(totalEndpoints, links.size());
+				int i = 0;
+				for (auto& link : links)
 				{
-					std::vector<std::string> informations;
-					boost::split(informations, resources[i], boost::is_any_of(";"));
-					EXPECT_EQ("</" + endpoint[i].GetName() + ">", informations[0]);
-
-					EXPECT_THAT(informations, Contains("ct=" + std::to_string(static_cast<int>(contentFormat))));
+					EXPECT_EQ(endpoint[i].GetName(), link.GetURI());
+					EXPECT_EQ(endpoint[i].GetContentFormat(), link.GetContentFormat());
+					++i;
 				}
 			}
 

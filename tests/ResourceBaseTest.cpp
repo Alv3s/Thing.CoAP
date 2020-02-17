@@ -44,6 +44,38 @@ namespace Thing {
 				EXPECT_CALL(server, NotifyObservers(&endpoint, _)).Times(0);
 				endpoint.ObservableChanged(status);
 			}
+
+			TEST_F(ResourceBaseTest, ResourceTypeTest)
+			{
+				const std::string resourceType = "Some Resource";
+				endpoint.SetResourceType(resourceType);
+
+				EXPECT_EQ(resourceType, endpoint.GetResourceType());
+			}
+
+			TEST_F(ResourceBaseTest, InterfaceDescriptionTest)
+			{
+				const std::string interfaceDescription = "Some Description";
+				endpoint.SetInterfaceDescription(interfaceDescription);
+
+				EXPECT_EQ(interfaceDescription, endpoint.GetInterfaceDescription());
+			}
+
+			TEST_F(ResourceBaseTest, TitleTest)
+			{
+				const std::string title = "Some title";
+				endpoint.SetTitle(title);
+
+				EXPECT_EQ(title, endpoint.GetTitle());
+			}
+
+			TEST_F(ResourceBaseTest, MaximumSizeEstimateTest)
+			{
+				const size_t maximumSizeEstimate = 10;
+				endpoint.SetMaximumSizeEstimate(maximumSizeEstimate);
+
+				EXPECT_EQ(maximumSizeEstimate, endpoint.GetMaximumSizeEstimate());
+			}
 		}
 	}
 }

@@ -29,6 +29,7 @@
     <ClInclude Include="ResourceMock.h">
       <Filter>Mocks</Filter>
     </ClInclude>
+    <ClInclude Include="WebLinkTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StatusTest.cpp" />
@@ -40,5 +41,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
     <ClCompile Include="ClientTest.cpp" />
     <ClCompile Include="ResourceBaseTest.cpp" />
+    <ClCompile Include="WebLinkTest.cpp" />
   </ItemGroup>
 </Project>

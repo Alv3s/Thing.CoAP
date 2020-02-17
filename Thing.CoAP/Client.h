@@ -25,6 +25,9 @@ namespace Thing
 			void SetPacketProvider(IPacketProvider* packetProvider) override;
 			void SetPacketProvider(IPacketProvider& packetProvider) override;
 
+			void Discover(ResponseCallback callback) override;
+
+			void Get(std::string endpoint, ResponseCallback callback) override;
 			void Get(std::string endpoint, std::vector<uint8_t> payload, ResponseCallback callback) override;
 			void Get(std::string endpoint, std::string payload, ResponseCallback callback) override;
 
