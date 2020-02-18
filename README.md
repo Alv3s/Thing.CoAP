@@ -20,7 +20,7 @@ The following architectures/devices were tested and have examples for:
 - **Discovery**: Discovery is implemented, allowing a client to discover automatically all available resources and their properties.
 - **Multicast Discovery**: Allows the discovery of all CoAP devices in the network using multicast.
 
-## Client Features
+### Client Features
 - **Get**: Get method is implemented. Typically used to read the state of a resource.
 - **Post**: Post method is implemented. Typically used to toggle the state of a resource or create a resource.
 - **Put**: Put method is implemented. Typically used to update the state of a resource.
