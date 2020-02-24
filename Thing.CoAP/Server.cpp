@@ -191,9 +191,8 @@ namespace Thing {
 									}
 
 									Thing::CoAP::Observer obs(address, port, Thing::CoAP::Functions::GenerateMessageID(), request.GetTokens());
-									if (option.GetLenght() > 0 && option.GetBuffer()[0] == 1)
-										removeObserver(url, obs);
-									else
+									removeObserver(url, obs);
+									if (option.GetLenght() == 0)
 									{
 										AddObserveOption(response, obs);
 										addObserver(url, obs);
@@ -272,7 +271,6 @@ namespace Thing {
 #pragma region Private Methods
 		void Server::addObserver(std::string& url, Thing::CoAP::Observer & obs)
 		{
-			removeObserver(url, obs);
 			resources[url].observers.push_back(obs);
 		}
 
