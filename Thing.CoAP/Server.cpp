@@ -64,10 +64,13 @@ namespace Thing {
 			return *endpoint;
 		}
 
-		void Server::AddResource(Thing::CoAP::IResource* endpoint)
+		void Server::AddResource(Thing::CoAP::IResource* resource)
 		{
-			endpoints[endpoint->GetName()] = endpoint;
-			endpoint->SetServer(this);
+			AvailableResource r;
+			r.resource = resource;
+			r.observers = std::list<Thing::CoAP::Observer>();
+			resources[resource->GetName()] = r;
+			resource->SetServer(this);
 		}
 
 		void Server::AddResource(Thing::CoAP::IResource& endpoint)
@@ -75,9 +78,9 @@ namespace Thing {
 			AddResource(&endpoint);
 		}
 
-		void Server::RemoveResource(Thing::CoAP::IResource* endpoint)
+		void Server::RemoveResource(Thing::CoAP::IResource* resource)
 		{
-			endpoints.erase(endpoint->GetName());
+			resources.erase(resource->GetName());
 		}
 
 		void Server::RemoveResource(Thing::CoAP::IResource& endpoint)
@@ -135,16 +138,16 @@ namespace Thing {
 
 				//response
 				Thing::CoAP::Response response;
+				response.SetVersion(request.GetVersion());
+				response.SetTokens(request.GetTokens());
+				response.SetMessageID(request.GetMessageID());
 				switch (request.GetCode())
 				{
 				case Thing::CoAP::Method::Empty:
 					if (request.GetType() == Thing::CoAP::MessageType::Confirmable)
 					{
-						response.SetVersion(request.GetVersion());
 						response.SetType(Thing::CoAP::MessageType::Reset);
 						response.SetCode(Thing::CoAP::Method::Empty);
-						response.SetMessageID(request.GetMessageID());
-						response.SetTokens(request.GetTokens());
 						response.SetPayload(NULL, 0);
 					}
 					else if (request.GetType() == Thing::CoAP::MessageType::Reset)
@@ -155,17 +158,14 @@ namespace Thing {
 					break;
 				case Thing::CoAP::Method::Get: case Thing::CoAP::Method::Post: case Thing::CoAP::Method::Put: case Thing::CoAP::Method::Delete:
 				{
-					response.SetVersion(request.GetVersion());
-					response.SetTokens(request.GetTokens());
-					response.SetMessageID(request.GetMessageID());
 					switch (request.GetType())
 					{
 					case Thing::CoAP::MessageType::Confirmable: response.SetType(Thing::CoAP::MessageType::Acknowledge); break;
 					case Thing::CoAP::MessageType::NonConfirmable: response.SetType(Thing::CoAP::MessageType::NonConfirmable); break;
 					}
 
-					std::map<std::string, Thing::CoAP::IResource*>::iterator it = this->endpoints.find(url);
-					if (it == endpoints.end())
+					std::map<std::string, AvailableResource>::iterator it = this->resources.find(url);
+					if (it == resources.end())
 					{
 						if (request.GetCode() == Thing::CoAP::Method::Get && url == ".well-known/core")
 							resourceDiscovery(&response, address, port);
@@ -174,7 +174,7 @@ namespace Thing {
 					}
 					else
 					{
-						Thing::CoAP::IResource* endpoint = it->second;
+						Thing::CoAP::IResource* resource = it->second.resource;
 						Thing::CoAP::Status e = Thing::CoAP::Status::Content();
 						switch (request.GetCode())
 						{
@@ -184,7 +184,7 @@ namespace Thing {
 							for (Thing::CoAP::Option& option : request.GetOptions())
 								if (option.GetNumber() == Thing::CoAP::OptionValue::Observe)
 								{
-									if (!endpoint->IsObservable())
+									if (!resource->IsObservable())
 									{
 										observeRequestButEndpointDoesntSupport = true;
 										break;
@@ -201,18 +201,18 @@ namespace Thing {
 									break;
 								}
 
-							e = observeRequestButEndpointDoesntSupport ? Status::MethodNotAllowed() : endpoint->Get(request);
+							e = observeRequestButEndpointDoesntSupport ? Status::MethodNotAllowed() : resource->Get(request);
 							break;
 						}
-						case Thing::CoAP::Method::Put: e = endpoint->Put(request); break;
-						case Thing::CoAP::Method::Post: e = endpoint->Post(request); break;
-						case Thing::CoAP::Method::Delete: e = endpoint->Delete(request); break;
+						case Thing::CoAP::Method::Put: e = resource->Put(request); break;
+						case Thing::CoAP::Method::Post: e = resource->Post(request); break;
+						case Thing::CoAP::Method::Delete: e = resource->Delete(request); break;
 						}
 
 						std::string statusPayload = e.GetPayload();
 						response.SetCode(static_cast<uint8_t>(e.GetCode()));
 						response.SetPayload((uint8_t*)statusPayload.c_str(), static_cast<int>(statusPayload.size()));
-						AddContentFormat(response, endpoint->GetContentFormat());
+						AddContentFormat(response, resource->GetContentFormat());
 					}
 					std::vector<uint8_t> payload = response.SerializePacket();
 					packetProvider->SendPacket(payload, address, port);
@@ -227,8 +227,8 @@ namespace Thing {
 		{
 			const std::string endpointPath = endpoint->GetName();
 
-			std::map<std::string, std::list<Observer>>::iterator observers = this->observers.find(endpointPath);
-			if (observers == this->observers.end())
+			std::map<std::string, AvailableResource>::iterator observers = this->resources.find(endpointPath);
+			if (observers == this->resources.end())
 				return; //There are no observers, no point in continue and waste processing.
 
 			Thing::CoAP::Response response;
@@ -238,7 +238,7 @@ namespace Thing {
 			std::string buffer = r.GetPayload();
 			response.SetPayload((uint8_t*)buffer.c_str(), static_cast<int>(buffer.size()));
 
-			for (Thing::CoAP::Observer& obs : observers->second)
+			for (Thing::CoAP::Observer& obs : observers->second.observers)
 			{
 				response.SetMessageID(obs.NextMessageID());
 
@@ -273,33 +273,23 @@ namespace Thing {
 		void Server::addObserver(std::string& url, Thing::CoAP::Observer & obs)
 		{
 			removeObserver(url, obs);
-			observers[url].push_back(obs);
+			resources[url].observers.push_back(obs);
 		}
 
 		void Server::removeObserver(std::string& url, Thing::CoAP::Observer & obs)
 		{
 			if (url.size() > 0)
 			{
-				std::map<std::string, std::list<Observer>>::iterator observers = this->observers.find(url);
-				if (observers == this->observers.end())
+				std::map<std::string, AvailableResource>::iterator observers = this->resources.find(url);
+				if (observers == this->resources.end())
 					return;
 
-				observers->second.remove(obs);
-				if (observers->second.empty())
-					this->observers.erase(observers);
+				observers->second.observers.remove(obs);
 				return;
 			}
 
-			for (auto it = this->observers.begin(); it != this->observers.end();)
-			{
-				it->second.remove(obs);
-				if (it->second.empty())
-				{
-					it = this->observers.erase(it);
-					continue;
-				}
-				++it;
-			}
+			for (auto it = this->resources.begin(); it != this->resources.end(); ++it)
+				it->second.observers.remove(obs);
 		}
 
 		void Server::resourceDiscovery(Thing::CoAP::Response* response, IPAddress ip, int port)
@@ -307,20 +297,21 @@ namespace Thing {
 			std::string result = "";
 
 			int i = 0;
-			for (auto& e : endpoints)
+			for (auto& r : resources)
 			{
+				Thing::CoAP::IResource* resource = r.second.resource;
 				if (i != 0)
 					result += ",";
 
 				char ct[3];
-				sprintf(ct, "%d", static_cast<int>(e.second->GetContentFormat()));
+				sprintf(ct, "%d", static_cast<int>(resource->GetContentFormat()));
 
-				std::string resourceType = e.second->GetResourceType();
-				std::string interfaceDescription = e.second->GetInterfaceDescription();
-				std::string title = e.second->GetTitle();
-				size_t maximumSizeEstimate = e.second->GetMaximumSizeEstimate();
+				std::string resourceType = resource->GetResourceType();
+				std::string interfaceDescription = resource->GetInterfaceDescription();
+				std::string title = resource->GetTitle();
+				size_t maximumSizeEstimate = resource->GetMaximumSizeEstimate();
 
-				result += "</" + e.first + ">";
+				result += "</" + r.first + ">";
 
 				if(interfaceDescription != "")
 					result += ";if=\"" + interfaceDescription + "\"";
@@ -328,7 +319,7 @@ namespace Thing {
 				if(resourceType != "")
 					result += ";rt=\"" + resourceType + "\"";
 
-				if (e.second->IsObservable())
+				if (resource->IsObservable())
 					result += ";obs";
 
 				if(title != "")

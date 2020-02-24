@@ -37,10 +37,15 @@ namespace Thing {
 			void SetPacketProvider(IPacketProvider* provider);
 			void SetPacketProvider(IPacketProvider& provider);
 		private:
+			struct AvailableResource
+			{
+				Thing::CoAP::IResource* resource;
+				std::list<Thing::CoAP::Observer> observers;
+			};
+
 			IPacketProvider* packetProvider;
 			int port;
-			std::map<std::string, Thing::CoAP::IResource*> endpoints;
-			std::map<std::string, std::list<Thing::CoAP::Observer> > observers;
+			std::map<std::string, AvailableResource> resources;
 
 			void addObserver(std::string& url, Thing::CoAP::Observer& obs);
 			void removeObserver(std::string& url, Thing::CoAP::Observer& obs);

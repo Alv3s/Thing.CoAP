@@ -28,10 +28,14 @@ namespace Thing {
 			static Thing::CoAP::Status NotFound();
 			static Thing::CoAP::Status NotImplemented();
 
-			void operator=(const Status& other)
+			Status& operator=(const Status& other)
 			{
+				if (&other == this)
+					return *this;
+
 				this->payload = other.payload;
 				this->code = other.code;
+				return *this;
 			}
 
 			bool operator==(const Status& other) const

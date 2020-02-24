@@ -13,7 +13,7 @@ namespace Thing {
 
 		}
 
-		Status::Status(const Status &t) : payload(t.GetPayload()), code(t.code)
+		Status::Status(const Status &t) : payload(t.payload), code(t.code)
 		{
 			
 		}
