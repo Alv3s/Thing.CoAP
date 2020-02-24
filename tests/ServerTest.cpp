@@ -781,6 +781,39 @@ namespace Thing {
 				Server.Process();
 			}
 
+			void ServerTest::ObserveReset(Thing::CoAP::IPAddress requestIPAddress, int requestPort, std::vector<uint8_t> tokens, uint8_t** response, int* responseLength)
+			{
+				const std::string endpointPath = "";
+				const uint16_t messageID = 0x1234;
+				const uint8_t version = 1;
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				const Thing::CoAP::MessageType messageType = Thing::CoAP::MessageType::Reset;
+
+				Thing::CoAP::Packet request;
+				request.SetVersion(version);
+				request.SetTokens(tokens);
+				request.SetMessageID(messageID);
+				request.SetType(messageType);
+				std::vector<Thing::CoAP::Option> options;
+
+				Thing::CoAP::Option urlPath;
+				urlPath.SetNumber(Thing::CoAP::OptionValue::URIPath);
+				urlPath.SetOption((uint8_t*)endpointPath.c_str(), endpointPath.size());
+				options.push_back(urlPath);
+
+				request.SetOptions(options);
+				request.SetCode(Thing::CoAP::Method::Empty);
+
+				std::vector<uint8_t> requestBuffer = request.SerializePacket();
+
+				Server.SetPacketProvider(udpProviderMock);
+				EXPECT_CALL(udpProviderMock, ReadPacket(_, _, _))
+					.Times(1)
+					.WillOnce(DoAll(SetArgPointee<0>(requestBuffer), SetArgPointee<1>(requestIPAddress), SetArgPointee<2>(requestPort), Return(true)));
+
+				Server.Process();
+			}
+
 			TEST_F(ServerTest, ObserverRequestSimpleTest)
 			{
 				const std::string endpointPath = "Endpoint";
@@ -1412,7 +1445,127 @@ namespace Thing {
 				EXPECT_EQ(0, response.GetPayload().size());
 			}
 
-#pragma endregion
+			TEST_F(ServerTest, ObserveRemoveAllSingleEndpointTest)
+			{
+				const std::string endpointPath = "Endpoint";
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				const Thing::CoAP::IPAddress requestIPAddress = 0x01010101;
+				const int requestPort = 1234;
+				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
+				const std::string observePacketPayload = "Observe Test";
+
+				ResourceMock endpoint;
+				EXPECT_CALL(endpoint, IsObservable()).WillRepeatedly(Return(true));
+				EXPECT_CALL(endpoint, GetName()).WillRepeatedly(Return(endpointPath));
+				EXPECT_CALL(endpoint, GetContentFormat()).WillRepeatedly(Return(contentFormat));
+				EXPECT_CALL(endpoint, Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Content(observePacketPayload)));
+				Server.AddResource(endpoint);
+
+				Server.Start();
+
+				uint8_t* responseBuffer = NULL;
+				int responseLength = 0;
+				ObserveTest(true, requestIPAddress, requestPort, std::vector<uint8_t>(tokens, tokens + sizeof(tokens)), endpointPath, &responseBuffer, &responseLength);
+
+				EXPECT_EQ(NULL, responseBuffer);
+				EXPECT_EQ(0, responseLength);
+				delete[] responseBuffer;
+
+				std::vector<uint8_t> observeBuffer;
+				EXPECT_CALL(udpProviderMock, SendPacket(_, requestIPAddress, requestPort))
+					.Times(1)
+					.WillOnce(SaveArg<0>(&observeBuffer));
+				Server.NotifyObservers(endpoint, Thing::CoAP::Status::Content(observePacketPayload));
+
+				Thing::CoAP::Packet observePacket;
+				observePacket.DesserializePacket(observeBuffer);
+
+				EXPECT_EQ(sizeof(tokens), observePacket.GetTokens().size());
+				EXPECT_TRUE(0 == std::memcmp(tokens, &observePacket.GetTokens()[0], sizeof(tokens)));
+
+				EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
+				EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
+				std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
+				EXPECT_EQ(3, responseOptions.size());
+
+				EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpointPath.c_str(), endpointPath.size())));
+				EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
+
+				ASSERT_EQ(observePacket.GetPayload().size(), observePacketPayload.size());
+				EXPECT_TRUE(0 == std::memcmp(&observePacket.GetPayload()[0], observePacketPayload.c_str(), observePacketPayload.size()));
+
+
+				//Remove From Observer
+ 				ObserveReset(requestIPAddress, requestPort, std::vector<uint8_t>(tokens, tokens + sizeof(tokens)), &responseBuffer, &responseLength);
+				EXPECT_CALL(udpProviderMock, SendPacket(_, requestIPAddress, requestPort)).Times(0);
+				Server.NotifyObservers(endpoint, Thing::CoAP::Status::Content(observePacketPayload));
+			}
+
+			TEST_F(ServerTest, ObserveRemoveAllMultipleEndpointTest)
+			{
+				const std::string endpointPath = "Endpoint";
+				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
+				const Thing::CoAP::IPAddress requestIPAddress = 0x01010101;
+				const int requestPort = 1234;
+				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
+				const std::string observePacketPayload = "Observe Test";
+
+				const int totalResources = 10;
+				ResourceMock endpoint[totalResources];
+				for (int i = 0; i < totalResources; ++i)
+				{
+					EXPECT_CALL(endpoint[i], IsObservable()).WillRepeatedly(Return(true));
+					EXPECT_CALL(endpoint[i], GetName()).WillRepeatedly(Return(endpointPath+std::to_string(i)));
+					EXPECT_CALL(endpoint[i], GetContentFormat()).WillRepeatedly(Return(contentFormat));
+					EXPECT_CALL(endpoint[i], Get(_)).WillRepeatedly(Return(Thing::CoAP::Status::Content(observePacketPayload)));
+					Server.AddResource(endpoint[i]);
+				}
+				Server.Start();
+
+				uint8_t* responseBuffer = NULL;
+				int responseLength = 0;
+				for (int i = 0; i < totalResources; ++i)
+				{
+					ObserveTest(true, requestIPAddress, requestPort, std::vector<uint8_t>(tokens, tokens + sizeof(tokens)), endpoint[i].GetName(), &responseBuffer, &responseLength);
+
+					EXPECT_EQ(NULL, responseBuffer);
+					EXPECT_EQ(0, responseLength);
+					delete[] responseBuffer;
+				}
+
+				for(int i = 0; i < totalResources; ++i)
+				{
+					std::vector<uint8_t> observeBuffer;
+					EXPECT_CALL(udpProviderMock, SendPacket(_, requestIPAddress, requestPort))
+						.Times(1)
+						.WillOnce(SaveArg<0>(&observeBuffer));
+					Server.NotifyObservers(endpoint[i], Thing::CoAP::Status::Content(observePacketPayload));
+
+					Thing::CoAP::Packet observePacket;
+					observePacket.DesserializePacket(observeBuffer);
+
+					EXPECT_EQ(sizeof(tokens), observePacket.GetTokens().size());
+					EXPECT_TRUE(0 == std::memcmp(tokens, &observePacket.GetTokens()[0], sizeof(tokens)));
+
+					EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
+					EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
+					std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
+					EXPECT_EQ(3, responseOptions.size());
+
+					EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint[i].GetName().c_str(), endpoint[i].GetName().size())));
+					EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
+
+					ASSERT_EQ(observePacket.GetPayload().size(), observePacketPayload.size());
+					EXPECT_TRUE(0 == std::memcmp(&observePacket.GetPayload()[0], observePacketPayload.c_str(), observePacketPayload.size()));
+				}
+
+				//Remove From Observer
+				ObserveReset(requestIPAddress, requestPort, std::vector<uint8_t>(tokens, tokens + sizeof(tokens)), &responseBuffer, &responseLength);
+				EXPECT_CALL(udpProviderMock, SendPacket(_, requestIPAddress, requestPort)).Times(0);
+				for(int i = 0; i < totalResources; ++i)
+					Server.NotifyObservers(endpoint[i], Thing::CoAP::Status::Content(observePacketPayload));
+			}
+ #pragma endregion
 		}
 	}
 }

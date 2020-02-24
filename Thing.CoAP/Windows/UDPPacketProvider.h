@@ -100,11 +100,7 @@ namespace Thing {
 					int slen = sizeof(si_other);
 					int recv_len;
 					if ((recv_len = recvfrom(s, (char*)buf, BUFLEN, 0, (struct sockaddr*) & si_other, &slen)) == SOCKET_ERROR)
-					{
-						std::cout << "Error!" << std::endl;
-						closesocket(s);
 						return false;
-					}
 
 					*buffer = std::vector<uint8_t>(buf, buf + recv_len);
 					*address = static_cast<uint32_t>(si_other.sin_addr.s_addr);

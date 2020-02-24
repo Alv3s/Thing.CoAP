@@ -164,101 +164,56 @@ namespace Thing {
 					case Thing::CoAP::MessageType::NonConfirmable: response.SetType(Thing::CoAP::MessageType::NonConfirmable); break;
 					}
 
-					switch (request.GetCode())
+					std::map<std::string, Thing::CoAP::IResource*>::iterator it = this->endpoints.find(url);
+					if (it == endpoints.end())
 					{
-					case Thing::CoAP::Method::Get:
-					{
-						if (url == ".well-known/core")
-						{
+						if (request.GetCode() == Thing::CoAP::Method::Get && url == ".well-known/core")
 							resourceDiscovery(&response, address, port);
-							break;
-						}
-
-						if (endpoints.find(url) == endpoints.end())
-						{
+						else
 							noEndpointDefinedResponse(&response, address, port);
-							break;
-						}
-
-						Thing::CoAP::IResource* endpoint = endpoints[url];
-						bool observeRequestButEndpointDoesntSupport = false;
-						for (Thing::CoAP::Option& option : request.GetOptions())
-							if (option.GetNumber() == Thing::CoAP::OptionValue::Observe)
-							{
-								if (!endpoint->IsObservable())
+					}
+					else
+					{
+						Thing::CoAP::IResource* endpoint = it->second;
+						Thing::CoAP::Status e = Thing::CoAP::Status::Content();
+						switch (request.GetCode())
+						{
+						case Thing::CoAP::Method::Get:
+						{
+							bool observeRequestButEndpointDoesntSupport = false;
+							for (Thing::CoAP::Option& option : request.GetOptions())
+								if (option.GetNumber() == Thing::CoAP::OptionValue::Observe)
 								{
-									observeRequestButEndpointDoesntSupport = true;
+									if (!endpoint->IsObservable())
+									{
+										observeRequestButEndpointDoesntSupport = true;
+										break;
+									}
+
+									Thing::CoAP::Observer obs(address, port, Thing::CoAP::Functions::GenerateMessageID(), request.GetTokens());
+									if (option.GetLenght() > 0 && option.GetBuffer()[0] == 1)
+										removeObserver(url, obs);
+									else
+									{
+										AddObserveOption(response, obs);
+										addObserver(url, obs);
+									}
 									break;
 								}
 
-								Thing::CoAP::Observer obs(address, port, Thing::CoAP::Functions::GenerateMessageID(), request.GetTokens());
-								if (option.GetLenght() > 0 && option.GetBuffer()[0] == 1)
-									removeObserver(url, obs);
-								else
-								{
-									AddObserveOption(response, obs);
-									addObserver(url, obs);
-								}
-								break;
-							}
-						
-						Thing::CoAP::Status e = observeRequestButEndpointDoesntSupport ? Status::MethodNotAllowed() : endpoint->Get(request);
-						AddContentFormat(response, endpoint->GetContentFormat());
-						std::string payload = e.GetPayload();
-						response.SetCode(static_cast<uint8_t>(e.GetCode()));
-						response.SetPayload((uint8_t*)payload.c_str(), static_cast<int>(payload.size()));
-						break;
-					}
-					case Thing::CoAP::Method::Put:
-					{
-						if (endpoints.find(url) == endpoints.end())
-						{
-							noEndpointDefinedResponse(&response, address, port);
+							e = observeRequestButEndpointDoesntSupport ? Status::MethodNotAllowed() : endpoint->Get(request);
 							break;
 						}
-
-						Thing::CoAP::IResource* endpoint = endpoints[url];
-						Thing::CoAP::Status e = endpoint->Put(request);
-						AddContentFormat(response, endpoint->GetContentFormat());
-						std::string payload = e.GetPayload();
-						response.SetCode(static_cast<uint8_t>(e.GetCode()));
-						response.SetPayload((uint8_t*)payload.c_str(), static_cast<int>(payload.size()));
-						break;
-					}
-					case Thing::CoAP::Method::Post:
-					{
-						if (endpoints.find(url) == endpoints.end())
-						{
-							noEndpointDefinedResponse(&response, address, port);
-							break;
+						case Thing::CoAP::Method::Put: e = endpoint->Put(request); break;
+						case Thing::CoAP::Method::Post: e = endpoint->Post(request); break;
+						case Thing::CoAP::Method::Delete: e = endpoint->Delete(request); break;
 						}
 
-						Thing::CoAP::IResource* endpoint = endpoints[url];
-						Thing::CoAP::Status e = endpoint->Post(request);
-						AddContentFormat(response, endpoint->GetContentFormat());
-						std::string payload = e.GetPayload();
+						std::string statusPayload = e.GetPayload();
 						response.SetCode(static_cast<uint8_t>(e.GetCode()));
-						response.SetPayload((uint8_t*)payload.c_str(), static_cast<int>(payload.size()));
-						break;
-					}
-					case Thing::CoAP::Method::Delete:
-					{
-						if (endpoints.find(url) == endpoints.end())
-						{
-							noEndpointDefinedResponse(&response, address, port);
-							break;
-						}
-
-						Thing::CoAP::IResource* endpoint = endpoints[url];
-						Thing::CoAP::Status e = endpoint->Delete(request);
+						response.SetPayload((uint8_t*)statusPayload.c_str(), static_cast<int>(statusPayload.size()));
 						AddContentFormat(response, endpoint->GetContentFormat());
-						std::string payload = e.GetPayload();
-						response.SetCode(static_cast<uint8_t>(e.GetCode()));
-						response.SetPayload((uint8_t*)payload.c_str(), static_cast<int>(payload.size()));
-						break;
 					}
-					}
-
 					std::vector<uint8_t> payload = response.SerializePacket();
 					packetProvider->SendPacket(payload, address, port);
 				}
@@ -272,6 +227,10 @@ namespace Thing {
 		{
 			const std::string endpointPath = endpoint->GetName();
 
+			std::map<std::string, std::list<Observer>>::iterator observers = this->observers.find(endpointPath);
+			if (observers == this->observers.end())
+				return; //There are no observers, no point in continue and waste processing.
+
 			Thing::CoAP::Response response;
 			response.SetVersion(1);
 			response.SetType(Thing::CoAP::MessageType::Confirmable);
@@ -279,7 +238,7 @@ namespace Thing {
 			std::string buffer = r.GetPayload();
 			response.SetPayload((uint8_t*)buffer.c_str(), static_cast<int>(buffer.size()));
 
-			for (Thing::CoAP::Observer& obs : observers[endpointPath])
+			for (Thing::CoAP::Observer& obs : observers->second)
 			{
 				response.SetMessageID(obs.NextMessageID());
 
@@ -319,7 +278,28 @@ namespace Thing {
 
 		void Server::removeObserver(std::string& url, Thing::CoAP::Observer & obs)
 		{
-			observers[url].remove(obs);
+			if (url.size() > 0)
+			{
+				std::map<std::string, std::list<Observer>>::iterator observers = this->observers.find(url);
+				if (observers == this->observers.end())
+					return;
+
+				observers->second.remove(obs);
+				if (observers->second.empty())
+					this->observers.erase(observers);
+				return;
+			}
+
+			for (auto it = this->observers.begin(); it != this->observers.end();)
+			{
+				it->second.remove(obs);
+				if (it->second.empty())
+				{
+					it = this->observers.erase(it);
+					continue;
+				}
+				++it;
+			}
 		}
 
 		void Server::resourceDiscovery(Thing::CoAP::Response* response, IPAddress ip, int port)

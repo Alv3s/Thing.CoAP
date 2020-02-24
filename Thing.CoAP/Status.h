@@ -28,6 +28,12 @@ namespace Thing {
 			static Thing::CoAP::Status NotFound();
 			static Thing::CoAP::Status NotImplemented();
 
+			void operator=(const Status& other)
+			{
+				this->payload = other.payload;
+				this->code = other.code;
+			}
+
 			bool operator==(const Status& other) const
 			{
 				return this->code == other.code && this->payload == other.payload;
@@ -41,8 +47,8 @@ namespace Thing {
 			Status(std::string payload, Thing::CoAP::ResponseCode code);
 			Status(Thing::CoAP::ResponseCode code);
 
-			const std::string payload;
-			const Thing::CoAP::ResponseCode code;
+			std::string payload;
+			Thing::CoAP::ResponseCode code;
 		};
 	}
 }

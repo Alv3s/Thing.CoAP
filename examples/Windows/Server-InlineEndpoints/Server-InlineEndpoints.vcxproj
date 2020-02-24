@@ -189,6 +189,10 @@ docker run -v"$(SolutionDir.TrimEnd('\'))":/root/Arduino/libraries/Thing.CoAP/ t
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.bin;$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.bin;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.partitions;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.bin;$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.bin;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.partitions;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.bin;$(SolutionDir)examples\ESP8266\$(ProjectName)\$(ProjectName).esp8266.esp8266.generic.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.bin;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.elf;$(SolutionDir)examples\ESP32\$(ProjectName)\$(ProjectName).esp32.esp32.esp32.partitions;%(Outputs)</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

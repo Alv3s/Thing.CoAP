@@ -21,6 +21,7 @@ namespace Thing {
 				void MultipleEndpointTest(ResourceMock* endpointMocks, int size, int callIndex, Thing::CoAP::Method method);
 				void ResourceDiscoveryTest(std::vector<uint8_t>* responseBuffer);
 				void ObserveTest(bool observe, Thing::CoAP::IPAddress ip, int port, std::vector<uint8_t> tokens, std::string endpoint, uint8_t** response, int* responseLength);
+				void ObserveReset(Thing::CoAP::IPAddress ip, int port, std::vector<uint8_t> tokens, uint8_t** response, int* responseLength);
 
 				Thing::CoAP::Server Server;
 				PacketProviderMock udpProviderMock;
