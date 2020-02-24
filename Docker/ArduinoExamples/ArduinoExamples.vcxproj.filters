@@ -15,8 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Server-InlineEndpoints.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <CustomBuild Include="Client.build" />
+    <CustomBuild Include="Client-Discovery.build" />
+    <CustomBuild Include="Server-InlineEndpoints.build" />
   </ItemGroup>
 </Project>

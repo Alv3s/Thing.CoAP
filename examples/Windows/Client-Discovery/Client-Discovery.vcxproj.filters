@@ -19,7 +19,4 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\Client\BuildArduinoExamples.i" />
-  </ItemGroup>
 </Project>
