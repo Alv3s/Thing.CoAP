@@ -269,9 +269,9 @@ namespace Thing {
 		void Packet::DesserializePacket(std::vector<uint8_t> payload)
 		{
 			if (payload.size() == 0)
-				DesserializePacket(NULL, 0);
-			else
-				DesserializePacket(&payload[0], payload.size());
+				return;
+
+			DesserializePacket(&payload[0], payload.size());
 		}
 
 
