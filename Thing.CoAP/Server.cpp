@@ -190,11 +190,13 @@ namespace Thing {
 								}
 
 								Thing::CoAP::Observer obs(address, port, Thing::CoAP::Functions::GenerateMessageID(), request.GetTokens());
-								removeObserver(url, obs);
-								if (option->GetLenght() == 0)
+								//The request is either to remove the observer or to add him (in which case we might being re-adding him).
+								//Either way then we need to remove him.
+								it->second.observers.remove(obs);
+								if (option->GetLenght() == 0) //Add Observer
 								{
 									AddObserveOption(response, obs);
-									addObserver(url, obs);
+									it->second.observers.push_back(obs);
 								}
 							}
 
@@ -267,11 +269,6 @@ namespace Thing {
 		}
 
 #pragma region Private Methods
-		void Server::addObserver(std::string& url, Thing::CoAP::Observer & obs)
-		{
-			resources[url].observers.push_back(obs);
-		}
-
 		void Server::removeObserver(std::string& url, Thing::CoAP::Observer & obs)
 		{
 			if (url.size() > 0)

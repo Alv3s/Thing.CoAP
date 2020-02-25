@@ -47,7 +47,6 @@ namespace Thing {
 			int port;
 			std::map<std::string, AvailableResource> resources;
 
-			void addObserver(std::string& url, Thing::CoAP::Observer& obs);
 			void removeObserver(std::string& url, Thing::CoAP::Observer& obs);
 
 			void resourceDiscovery(Thing::CoAP::Response* response, IPAddress ip, int port);
