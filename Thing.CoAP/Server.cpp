@@ -180,27 +180,25 @@ namespace Thing {
 						{
 						case Thing::CoAP::Method::Get:
 						{
-							bool observeRequestButEndpointDoesntSupport = false;
-							for (Thing::CoAP::Option& option : request.GetOptions())
-								if (option.GetNumber() == Thing::CoAP::OptionValue::Observe)
+							Thing::CoAP::Option* option = Thing::CoAP::Option::Find(options, Thing::CoAP::OptionValue::Observe);
+							if (option)
+							{
+								if (!resource->IsObservable())
 								{
-									if (!resource->IsObservable())
-									{
-										observeRequestButEndpointDoesntSupport = true;
-										break;
-									}
-
-									Thing::CoAP::Observer obs(address, port, Thing::CoAP::Functions::GenerateMessageID(), request.GetTokens());
-									removeObserver(url, obs);
-									if (option.GetLenght() == 0)
-									{
-										AddObserveOption(response, obs);
-										addObserver(url, obs);
-									}
+									e = Status::MethodNotAllowed();
 									break;
 								}
 
-							e = observeRequestButEndpointDoesntSupport ? Status::MethodNotAllowed() : resource->Get(request);
+								Thing::CoAP::Observer obs(address, port, Thing::CoAP::Functions::GenerateMessageID(), request.GetTokens());
+								removeObserver(url, obs);
+								if (option->GetLenght() == 0)
+								{
+									AddObserveOption(response, obs);
+									addObserver(url, obs);
+								}
+							}
+
+							e = resource->Get(request);
 							break;
 						}
 						case Thing::CoAP::Method::Put: e = resource->Put(request); break;

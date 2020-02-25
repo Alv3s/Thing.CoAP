@@ -35,5 +35,31 @@ namespace Thing {
 			for (int i = 0; i < length; ++i)
 				this->buffer.push_back(buffer[i]);
 		}
+
+		Option* Option::Find(std::vector<Option>& options, Thing::CoAP::OptionValue value)
+		{
+			for (size_t begin = 0, end = options.size() - 1, p = (end + begin)/2; ; p = (end + begin) / 2)
+			{
+				Thing::CoAP::Option& option = options[p];
+				Thing::CoAP::OptionValue optionValue = option.GetNumber();
+				if(value == optionValue)
+					return &option;
+
+				if (value < optionValue)
+				{
+					if (p == 0)
+						return NULL;
+					end = p - 1;
+				}
+				else
+				{
+					if (p == end)
+						return NULL;
+					begin = p + 1;
+				}
+			}
+			return NULL;
+		}
+
 	}
 }
