@@ -225,7 +225,7 @@ namespace Thing {
 			const std::string endpointPath = endpoint->GetName();
 
 			std::map<std::string, AvailableResource>::iterator observers = this->resources.find(endpointPath);
-			if (observers == this->resources.end())
+			if (observers == this->resources.end() || observers->second.observers.size() == 0)
 				return; //There are no observers, no point in continue and waste processing.
 
 			Thing::CoAP::Response response;
