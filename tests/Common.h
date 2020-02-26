@@ -1,23 +1,12 @@
 #pragma once
 
 #include "gmock/gmock.h"
-#include "..//Thing.CoAP/Option.h"
+#include "../Thing.CoAP/Option.h"
+#include <cstring>
 
 namespace Thing {
 	namespace CoAP {
 		namespace Tests {
-			ACTION_TEMPLATE(CopyBuffer, HAS_2_TEMPLATE_PARAMS(int, a, int, b), AND_2_VALUE_PARAMS(pointer, length))
-			{
-				const void* bufferData = (void*)::std::tr1::get<a>(args);
-				const void* lengthData = (void*)::std::tr1::get<b>(args);
-
-				uint8_t* buffer = new uint8_t[(int)lengthData];
-				std::memcpy(buffer, bufferData, (int)lengthData);
-
-				*pointer = buffer;
-				*length = (int)lengthData;
-			}
-
 			MATCHER_P(ContentFormat, contentformat, "")
 			{
 				Thing::CoAP::Option value = (Thing::CoAP::Option)arg;

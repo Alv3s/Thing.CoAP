@@ -1,6 +1,7 @@
 #include "ObserverTest.h"
 #include "../Thing.CoAP/Observer.h"
 #include "../Thing.CoAP/Functions.h"
+#include <cstring>
 
 namespace Thing {
 	namespace CoAP {

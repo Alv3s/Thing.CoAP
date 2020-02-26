@@ -1,8 +1,7 @@
 #include <iostream>
 #include "Thing.CoAP/Client.h"
-#include "Thing.CoAP/Windows/UDPPacketProvider.h"
+#include "Thing.CoAP/Linux/UDPPacketProvider.h"
 #include <thread>
-
 
 void sendMessage(Thing::CoAP::Client& coapClient) {
 	//Make a post
@@ -13,7 +12,7 @@ void sendMessage(Thing::CoAP::Client& coapClient) {
 		std::cout << "Server sent the following message:" << std::endl;
 		std::cout << received << std::endl;
 
-		Sleep(5000);
+		usleep(5000*1000);
 		sendMessage(coapClient);
 	});
 }
@@ -24,7 +23,7 @@ int main()
 	Thing::CoAP::Client coapClient;
 
 	//Tell our client that we will be using UDP 
-	Thing::CoAP::Windows::UDPPacketProvider<1000> packetProvider;
+	Thing::CoAP::Linux::UDPPacketProvider<1000> packetProvider;
 	coapClient.SetPacketProvider(packetProvider);
 
 	//Connect CoAP client to a server

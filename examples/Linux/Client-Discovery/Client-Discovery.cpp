@@ -1,16 +1,17 @@
 #include <iostream>
 #include "Thing.CoAP/Client.h"
-#include "Thing.CoAP/Windows/UDPPacketProvider.h"
+#include "Thing.CoAP/Linux/UDPPacketProvider.h"
 #include <thread>
 #include <stdlib.h>
 #include "Thing.CoAP/WebLink.h"
+
 int main()
 {
 	//Declare our CoAP client instance and packet handler
 	Thing::CoAP::Client coapClient;
 
 	//Tell our client that we will be using UDP 
-	Thing::CoAP::Windows::UDPPacketProvider<1000> packetProvider;
+	Thing::CoAP::Linux::UDPPacketProvider<1000> packetProvider;
 	coapClient.SetPacketProvider(packetProvider);
 
 	//Connect CoAP client to a server

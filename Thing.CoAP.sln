@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client-Discovery", "example
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArduinoExamples", "Docker\ArduinoExamples\ArduinoExamples.vcxproj", "{DAFF9C6D-8AEA-42AA-B3AF-69CB73EEE51D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinuxExamples", "Docker\LinuxExamples\LinuxExamples.vcxproj", "{60C1A9C9-F568-43FA-BE7D-349FA79F2229}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -73,6 +75,14 @@ Global
 		{DAFF9C6D-8AEA-42AA-B3AF-69CB73EEE51D}.Release|x64.Build.0 = Release|x64
 		{DAFF9C6D-8AEA-42AA-B3AF-69CB73EEE51D}.Release|x86.ActiveCfg = Release|Win32
 		{DAFF9C6D-8AEA-42AA-B3AF-69CB73EEE51D}.Release|x86.Build.0 = Release|Win32
+		{60C1A9C9-F568-43FA-BE7D-349FA79F2229}.Debug|x64.ActiveCfg = Debug|x64
+		{60C1A9C9-F568-43FA-BE7D-349FA79F2229}.Debug|x64.Build.0 = Debug|x64
+		{60C1A9C9-F568-43FA-BE7D-349FA79F2229}.Debug|x86.ActiveCfg = Debug|Win32
+		{60C1A9C9-F568-43FA-BE7D-349FA79F2229}.Debug|x86.Build.0 = Debug|Win32
+		{60C1A9C9-F568-43FA-BE7D-349FA79F2229}.Release|x64.ActiveCfg = Release|x64
+		{60C1A9C9-F568-43FA-BE7D-349FA79F2229}.Release|x64.Build.0 = Release|x64
+		{60C1A9C9-F568-43FA-BE7D-349FA79F2229}.Release|x86.ActiveCfg = Release|Win32
+		{60C1A9C9-F568-43FA-BE7D-349FA79F2229}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +92,7 @@ Global
 		{78999EAC-3572-481B-9FA8-D1299742891C} = {F336A719-2F3F-4AC7-809C-87EB947EE9E6}
 		{333F5338-289D-4373-AF65-971B02F42211} = {F336A719-2F3F-4AC7-809C-87EB947EE9E6}
 		{DAFF9C6D-8AEA-42AA-B3AF-69CB73EEE51D} = {F336A719-2F3F-4AC7-809C-87EB947EE9E6}
+		{60C1A9C9-F568-43FA-BE7D-349FA79F2229} = {F336A719-2F3F-4AC7-809C-87EB947EE9E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8CA562F3-15A5-4997-8C04-0F6C0870E933}

@@ -9,6 +9,7 @@ using ::testing::SaveArg;
 using ::testing::Contains;
 using ::testing::SetArgPointee;
 using ::testing::Return;
+using ::testing::DoAll;
 
 namespace Thing {
 	namespace CoAP {

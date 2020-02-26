@@ -1,6 +1,5 @@
 #include "ServerTest.h"
 #include <algorithm>
-#include <boost/algorithm/string.hpp>
 #include "Common.h"
 #include "../Thing.CoAP/WebLink.h"
 
@@ -11,6 +10,7 @@ using ::testing::SetArgPointee;
 using ::testing::Contains;
 using ::testing::Not;
 using ::testing::SaveArg;
+using ::testing::DoAll;
 
 namespace Thing {
 	namespace CoAP {
