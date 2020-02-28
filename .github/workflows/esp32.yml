@@ -1,0 +1,19 @@
+name: ESP32 CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Prepare container
+      run: docker build -t thing.coap - < ./Docker/Arduino.Dockerfile
+    - name: Build Client Example
+      run: docker run -v$(pwd):/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp32:esp32:esp32 /root/Arduino/libraries/Thing.CoAP/examples/ESP32/Client
+    - name: Build Client-Discovery Example
+      run: docker run -v$(pwd):/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp32:esp32:esp32 /root/Arduino/libraries/Thing.CoAP/examples/ESP32/Client-Discovery
+    - name: Build Server-InlineEndpoint Example
+      run: docker run -v$(pwd):/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp32:esp32:esp32 /root/Arduino/libraries/Thing.CoAP/examples/ESP32/Server-InlineEndpoint
