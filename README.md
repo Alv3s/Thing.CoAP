@@ -1,6 +1,8 @@
 # Thing.CoAP
 
-![C/C++ CI](https://github.com/Alv3s/Thing.CoAP/workflows/C/C++%20CI/badge.svg?branch=master)
+![Ubuntu CI](https://github.com/Alv3s/Thing.CoAP/workflows/C/C++%20CI/badge.svg?branch=master)
+![ESP8266 CI](https://github.com/Alv3s/Thing.CoAP/workflows/ESP8266%20CI/badge.svg?branch=master)
+![ESP32 CI](https://github.com/Alv3s/Thing.CoAP/workflows/ESP32%20CI/badge.svg?branch=master)
 
 Thing.CoAP is a platform independent library implementing both CoAP Server and Client. It has been tested on ESP, ESP32 and regular Windows/Linux application.
 
