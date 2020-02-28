@@ -3,12 +3,13 @@
 Thing.CoAP is a platform independent library implementing both CoAP Server and Client. It has been tested on ESP, ESP32 and regular Windows/Linux application.
 
 ## Features
-CoAP is a protocol that operates similar to a REST application: A server has one or several endpoints (caleed Resources) accessible via "Get", "Post", "Put" and "Delete" methods. A client can be call the server to get the data. This is useful for constrained devices, like Microcontrollers, allowing the communication between these devices or a computer. One of the advantages of CoAp when comparing to MQTT is that CoAP protocol doesn't require a broker, making an easier to deploy environment without a single failure point.
+CoAP is a protocol that operates similar to a REST application: A server has one or several endpoints (called Resources) accessible via "Get", "Post", "Put" and "Delete" methods. A client can be call the server to get the data. This is useful for constrained devices, like Microcontrollers, allowing the communication between these devices or a computer. One of the advantages of CoAp when comparing to MQTT is that CoAP protocol doesn't require a broker, making an easier to deploy environment without a single failure point.
 
 The following architectures/devices were tested and have examples for:
 - Windows
 - ESP8266
 - ESP32
+- Linux
 
 ### Server Features
 - **Any number of resources**:  Thing.CoAP allows to add any number of Resources.
@@ -47,5 +48,5 @@ $ make install
 ```
 You will find the compiled examples on folder ```examples```.
 
-## Current State and Mantainability
-The Repository has unit tests that cover virtually 100% of the code, allowing the code to be regression free and virtually bug free. The code was developed with portability in mind, allowing it to be easily implemented on any compiler or device that supports C++11 std functions.
+## Regression Tests
+The Repository has unit tests that cover virtually 100% of the code, allowing the code to have the least ammount of regressions throught the implementation of new features and bug fixing. Let's keep it that way.
