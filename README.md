@@ -1,5 +1,7 @@
 # Thing.CoAP
 
+![C/C++ CI](https://github.com/Alv3s/Thing.CoAP/workflows/C/C++%20CI/badge.svg?branch=master)
+
 Thing.CoAP is a platform independent library implementing both CoAP Server and Client. It has been tested on ESP, ESP32 and regular Windows/Linux application.
 
 ## Features
