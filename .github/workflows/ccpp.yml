@@ -9,6 +9,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: git submodules
+      run: git submodule update --init --recursive
     - name: autoreconf
       run: autoreconf -i
     - name: configure
