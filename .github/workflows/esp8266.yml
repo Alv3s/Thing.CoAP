@@ -16,4 +16,4 @@ jobs:
     - name: Build Client-Discovery Example
       run: docker run -v$(pwd):/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp8266:esp8266:generic /root/Arduino/libraries/Thing.CoAP/examples/ESP8266/Client-Discovery
     - name: Build Server-InlineEndpoint Example
-      run: docker run -v$(pwd):/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp8266:esp8266:generic /root/Arduino/libraries/Thing.CoAP/examples/ESP8266/Server-InlineEndpoint
+      run: docker run -v$(pwd):/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp8266:esp8266:generic /root/Arduino/libraries/Thing.CoAP/examples/ESP8266/Server-InlineEndpoints
