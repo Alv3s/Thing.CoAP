@@ -1,4 +1,4 @@
-name: CI
+name: ESP8266 CI
 
 on: [push]
 
@@ -12,4 +12,4 @@ jobs:
     - name: Prepare container
       run: docker build -t thing.coap - < ./Docker/Arduino.Dockerfile
     - name: Build Client Example
-      run: docker run -v.:/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp8266:esp8266:generic /root/Arduino/libraries/Thing.CoAP/examples/ESP8266/Client
+      run: docker run -v$(pwd):/root/Arduino/libraries/Thing.CoAP/ thing.coap arduino-cli compile --fqbn esp8266:esp8266:generic /root/Arduino/libraries/Thing.CoAP/examples/ESP8266/Client
