@@ -1,4 +1,4 @@
-name: ESP8266 CI
+name: ESP8266
 
 on: [push]
 
