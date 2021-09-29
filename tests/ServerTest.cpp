@@ -30,7 +30,7 @@ namespace Thing {
 			TEST_F(ServerTest, PortTest)
 			{
 				const int ports[] = { 1, 2, 3 };
-				for (int i = 0; i < sizeof(ports) / sizeof(int); ++i)
+				for (size_t i = 0; i < sizeof(ports) / sizeof(int); ++i)
 				{
 					Server.SetPort(ports[i]);
 					EXPECT_EQ(ports[i], Server.GetPort());
@@ -48,7 +48,6 @@ namespace Thing {
 				Server.SetPacketProvider(udpProviderMock);
 			}
 
-#pragma region Simple Endpoint Tests
 			void ServerTest::BaseEndpointTest(Thing::CoAP::Method method, Thing::CoAP::IResource& endpoint)
 			{
 				const std::string endpointPath = endpoint.GetName();
@@ -97,7 +96,7 @@ namespace Thing {
 
 				std::vector<Thing::CoAP::Option>& responseOptions = response.GetOptions();
 				EXPECT_THAT(responseOptions, ::testing::Contains(ContentFormat(contentFormat)));
-				EXPECT_EQ(0, response.GetPayload().size());
+				EXPECT_EQ(0ul, response.GetPayload().size());
 			}
 
 			void ServerTest::SimpleEndpointTest(Thing::CoAP::Method method)
@@ -180,9 +179,7 @@ namespace Thing {
 			{
 				FunctionalEndpointTest(Thing::CoAP::Method::Delete);
 			}
-#pragma endregion
 
-#pragma region Endpoint Not Found Tests
 			void ServerTest::EndpointNotFoundTest(Thing::CoAP::Method method)
 			{
 				const std::string endpointPath = "EndpointNotExist";
@@ -191,7 +188,6 @@ namespace Thing {
 				const Thing::CoAP::IPAddress requestIPAddress = 0x01010101;
 				const int requestPort = 1234;
 				const uint8_t version = 1;
-				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
 				const Thing::CoAP::MessageType messageType = Thing::CoAP::MessageType::NonConfirmable;
 
 				Thing::CoAP::Packet request;
@@ -230,8 +226,8 @@ namespace Thing {
 				EXPECT_TRUE(0 == std::memcmp(&request.GetTokens()[0], &response.GetTokens()[0], response.GetTokens().size()));
 
 				std::vector<Thing::CoAP::Option>& responseOptions = response.GetOptions();
-				EXPECT_EQ(0, responseOptions.size());
-				EXPECT_EQ(0, response.GetPayload().size());
+				EXPECT_EQ(0ul, responseOptions.size());
+				EXPECT_EQ(0ul, response.GetPayload().size());
 			}
 
 			TEST_F(ServerTest, NoEndpointFoundGetTesting)
@@ -252,7 +248,6 @@ namespace Thing {
 			{
 				EndpointNotFoundTest(Thing::CoAP::Method::Delete);
 			}
-#pragma endregion
 
 			void ServerTest::MultipleEndpointTest(ResourceMock* endpoint, int size, int callIndex, Thing::CoAP::Method method)
 			{
@@ -308,7 +303,7 @@ namespace Thing {
 
 				std::vector<Thing::CoAP::Option>& responseOptions = response.GetOptions();
 				EXPECT_THAT(responseOptions, ::testing::Contains(ContentFormat(contentFormat)));
-				EXPECT_EQ(0, response.GetPayload().size());
+				EXPECT_EQ(0ul, response.GetPayload().size());
 			}
 
 			TEST_F(ServerTest, MultipleEndpointTest)
@@ -331,7 +326,6 @@ namespace Thing {
 					MultipleEndpointTest(endpoint, totalEndpoints, i, Thing::CoAP::Method::Get);
 			}
 
-#pragma region Resource Discovery Test
 			void ServerTest::ResourceDiscoveryTest(std::vector<uint8_t>* responseBuffer)
 			{
 				const std::string endpointPath = ".well-known/core";
@@ -390,7 +384,7 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_EQ(0, response.GetPayload().size());
+				EXPECT_EQ(0ul, response.GetPayload().size());
 			}
 
 			TEST_F(ServerTest, ResourceDiscoverySimpleTest_InterfaceDescription)
@@ -412,12 +406,12 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
 				std::list<WebLink> links = WebLink::ParseString(payload);
-				EXPECT_EQ(1, links.size());
+				EXPECT_EQ(1ul, links.size());
 
 				EXPECT_EQ(endpointName, links.begin()->GetURI());
 				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
@@ -442,12 +436,12 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
 				std::list<WebLink> links = WebLink::ParseString(payload);
-				EXPECT_EQ(1, links.size());
+				EXPECT_EQ(1ul, links.size());
 
 				EXPECT_EQ(endpointName, links.begin()->GetURI());
 				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
@@ -473,12 +467,12 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
 				std::list<WebLink> links = WebLink::ParseString(payload);
-				EXPECT_EQ(1, links.size());
+				EXPECT_EQ(1ul, links.size());
 
 				EXPECT_EQ(endpointName, links.begin()->GetURI());
 				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
@@ -503,12 +497,12 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
 				std::list<WebLink> links = WebLink::ParseString(payload);
-				EXPECT_EQ(1, links.size());
+				EXPECT_EQ(1ul, links.size());
 
 				EXPECT_EQ(endpointName, links.begin()->GetURI());
 				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
@@ -534,12 +528,12 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
 				std::list<WebLink> links = WebLink::ParseString(payload);
-				EXPECT_EQ(1, links.size());
+				EXPECT_EQ(1ul, links.size());
 
 				EXPECT_EQ(endpointName, links.begin()->GetURI());
 				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
@@ -564,12 +558,12 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
 				std::list<WebLink> links = WebLink::ParseString(payload);
-				EXPECT_EQ(1, links.size());
+				EXPECT_EQ(1ul, links.size());
 
 				EXPECT_EQ(endpointName, links.begin()->GetURI());
 				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
@@ -595,12 +589,12 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
 				std::list<WebLink> links = WebLink::ParseString(payload);
-				EXPECT_EQ(1, links.size());
+				EXPECT_EQ(1ul, links.size());
 
 				EXPECT_EQ(endpointName, links.begin()->GetURI());
 				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
@@ -625,12 +619,12 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
 				std::list<WebLink> links = WebLink::ParseString(payload);
-				EXPECT_EQ(1, links.size());
+				EXPECT_EQ(1ul, links.size());
 
 				EXPECT_EQ(endpointName, links.begin()->GetURI());
 				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
@@ -656,12 +650,12 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
 				std::list<WebLink> links = WebLink::ParseString(payload);
-				EXPECT_EQ(1, links.size());
+				EXPECT_EQ(1ul, links.size());
 
 				EXPECT_EQ(endpointName, links.begin()->GetURI());
 				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
@@ -687,12 +681,12 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
 				std::list<WebLink> links = WebLink::ParseString(payload);
-				EXPECT_EQ(1, links.size());
+				EXPECT_EQ(1ul, links.size());
 
 				EXPECT_EQ(endpointName, links.begin()->GetURI());
 				EXPECT_EQ(contentFormat, links.begin()->GetContentFormat());
@@ -701,12 +695,12 @@ namespace Thing {
 
 			TEST_F(ServerTest, ResourceDiscoveryMultipleTest)
 			{
-				const int totalEndpoints = 10;
+				const size_t totalEndpoints = 10;
 				const std::string endpointBaseName = "Endpoint";
 				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
 				ResourceMock endpoint[totalEndpoints];
 
-				for (int i = 0; i < totalEndpoints; ++i)
+				for (size_t i = 0; i < totalEndpoints; ++i)
 				{
 					EXPECT_CALL(endpoint[i], GetName()).WillRepeatedly(Return(endpointBaseName + std::to_string(i)));
 					EXPECT_CALL(endpoint[i], GetContentFormat()).WillRepeatedly(Return(contentFormat));
@@ -721,7 +715,7 @@ namespace Thing {
 				Thing::CoAP::Packet response;
 				response.DesserializePacket(responseBuffer);
 
-				EXPECT_NE(0, response.GetPayload().size());
+				EXPECT_NE(0ul, response.GetPayload().size());
 
 				std::string payload = std::string(reinterpret_cast<char*>(&response.GetPayload()[0]), response.GetPayload().size());
 
@@ -736,15 +730,11 @@ namespace Thing {
 				}
 			}
 
-#pragma endregion
-
-#pragma region Observers Test
 			void ServerTest::ObserveTest(bool observe, Thing::CoAP::IPAddress requestIPAddress, int requestPort, std::vector<uint8_t> tokens, std::string endpoint, uint8_t** responseBuffer, int* responseLength)
 			{
 				const std::string endpointPath = endpoint;
 				const uint16_t messageID = 0x1234;
 				const uint8_t version = 1;
-				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
 				const Thing::CoAP::MessageType messageType = Thing::CoAP::MessageType::NonConfirmable;
 
 				Thing::CoAP::Packet request;
@@ -786,7 +776,6 @@ namespace Thing {
 				const std::string endpointPath = "";
 				const uint16_t messageID = 0x1234;
 				const uint8_t version = 1;
-				const Thing::CoAP::ContentFormat contentFormat = Thing::CoAP::ContentFormat::ApplicationJSon;
 				const Thing::CoAP::MessageType messageType = Thing::CoAP::MessageType::Reset;
 
 				Thing::CoAP::Packet request;
@@ -858,9 +847,9 @@ namespace Thing {
 					EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
 					EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
 					std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
-					EXPECT_EQ(3, responseOptions.size());
+					EXPECT_EQ(3ul, responseOptions.size());
 
-					uint8_t observeOption[2] = { (i + 2) >> 8, (i + 2) };
+					uint8_t observeOption[2] = { static_cast<uint8_t>((i + 2) >> 8), static_cast<uint8_t>(i + 2) };
 					EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::Observe, (uint8_t*)observeOption, 2)));
 					EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpointPath.c_str(), endpointPath.size())));
 					EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
@@ -895,7 +884,7 @@ namespace Thing {
 					uint8_t* responseBuffer = NULL;
 					int responseLength = 0;
 					std::vector<uint8_t> packetTokens;
-					for (int j = 0; j < sizeof(tokens); ++j)
+					for (size_t j = 0; j < sizeof(tokens); ++j)
 						packetTokens.push_back(tokens[j]);
 					packetTokens[0] = i;
 					ObserveTest(true, requestIPAddress | (uint8_t)i, requestPort | (uint8_t)i, packetTokens, endpointPath, &responseBuffer, &responseLength);
@@ -926,9 +915,9 @@ namespace Thing {
 						EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
 						EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
 						std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
-						EXPECT_EQ(3, responseOptions.size());
+						EXPECT_EQ(3ul, responseOptions.size());
 
-						uint8_t observeOption[2] = { (i + 2) >> 8, (i + 2) };
+						uint8_t observeOption[2] = { static_cast<uint8_t>((i + 2) >> 8), static_cast<uint8_t>(i + 2) };
 						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::Observe, (uint8_t*)observeOption, 2)));
 						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpointPath.c_str(), endpointPath.size())));
 						EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
@@ -955,11 +944,11 @@ namespace Thing {
 				const uint8_t tokens[] = { 0x01, 0x02, 0x03, 0x04 };
 				const std::string observePacketPayload = "Observe Test";
 				const int totalNotifications = 5;
-				const int totalEndpoints = 10;
+				const size_t totalEndpoints = 10;
 
 				ResourceMock endpoint[totalEndpoints];
 
-				for (int i = 0; i < totalEndpoints; ++i)
+				for (size_t i = 0; i < totalEndpoints; ++i)
 				{
 					EXPECT_CALL(endpoint[i], IsObservable()).WillRepeatedly(Return(true));
 					EXPECT_CALL(endpoint[i], GetName()).WillRepeatedly(Return(endpointPath + std::to_string(i)));
@@ -969,7 +958,7 @@ namespace Thing {
 				}
 				Server.Start();
 
-				for (int i = 0; i < totalEndpoints; ++i)
+				for (size_t i = 0; i < totalEndpoints; ++i)
 				{
 					if (i % 2 == 0)
 						continue;
@@ -983,7 +972,7 @@ namespace Thing {
 					delete[] responseBuffer;
 				}
 
-				for (int j = 0; j < totalEndpoints; ++j)
+				for (size_t j = 0; j < totalEndpoints; ++j)
 					for (int i = 0; i < totalNotifications; ++i)
 					{
 						std::vector<uint8_t> observeBuffer;
@@ -1003,9 +992,9 @@ namespace Thing {
 						EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
 						EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
 						std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
-						EXPECT_EQ(3, responseOptions.size());
+						EXPECT_EQ(3ul, responseOptions.size());
 
-						uint8_t observeOption[2] = { (i + 2) >> 8, (i + 2) };
+						uint8_t observeOption[2] = { static_cast<uint8_t>((i + 2) >> 8), static_cast<uint8_t>(i + 2) };
 						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::Observe, (uint8_t*)observeOption, 2)));
 						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint[j].GetName().c_str(), endpoint[j].GetName().size())));
 						EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
@@ -1056,7 +1045,7 @@ namespace Thing {
 				EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
 				EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
 				std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
-				EXPECT_EQ(3, responseOptions.size());
+				EXPECT_EQ(3ul, responseOptions.size());
 
 				EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpointPath.c_str(), endpointPath.size())));
 				EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
@@ -1098,7 +1087,7 @@ namespace Thing {
 					uint8_t* responseBuffer = NULL;
 					int responseLength = 0;
 					std::vector<uint8_t> packetTokens;
-					for (int j = 0; j < sizeof(tokens); ++j)
+					for (size_t j = 0; j < sizeof(tokens); ++j)
 						packetTokens.push_back(tokens[j]);
 					packetTokens[0] = i;
 					ObserveTest(true, requestIPAddress | (uint8_t)i, requestPort | (uint8_t)i, packetTokens, endpointPath, &responseBuffer, &responseLength);
@@ -1126,9 +1115,9 @@ namespace Thing {
 						EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
 						EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
 						std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
-						EXPECT_EQ(3, responseOptions.size());
+						EXPECT_EQ(3ul, responseOptions.size());
 
-						uint8_t observeOption[2] = { (i + 2) >> 8, (i + 2) };
+						uint8_t observeOption[2] = { static_cast<uint8_t>((i + 2) >> 8), static_cast<uint8_t>(i + 2) };
 						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::Observe, (uint8_t*)observeOption, 2)));
 						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpointPath.c_str(), endpointPath.size())));
 						EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
@@ -1215,9 +1204,9 @@ namespace Thing {
 						EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
 						EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
 						std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
-						EXPECT_EQ(3, responseOptions.size());
+						EXPECT_EQ(3ul, responseOptions.size());
 
-						uint8_t observeOption[2] = { (i + 2) >> 8, (i + 2) };
+						uint8_t observeOption[2] = { static_cast<uint8_t>((i + 2) >> 8), static_cast<uint8_t>(i + 2) };
 						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::Observe, (uint8_t*)observeOption, 2)));
 						EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint[j].GetName().c_str(), endpoint[j].GetName().size())));
 						EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
@@ -1293,9 +1282,9 @@ namespace Thing {
 					EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
 					EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
 					std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
-					EXPECT_EQ(3, responseOptions.size());
+					EXPECT_EQ(3ul, responseOptions.size());
 
-					uint8_t observeOption[2] = { (i + 2) >> 8, (i + 2) };
+					uint8_t observeOption[2] = { static_cast<uint8_t>((i + 2) >> 8), static_cast<uint8_t>(i + 2) };
 					EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::Observe, (uint8_t*)observeOption, 2)));
 					EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpointPath.c_str(), endpointPath.size())));
 					EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
@@ -1371,7 +1360,7 @@ namespace Thing {
 
 				std::vector<Thing::CoAP::Option>& responseOptions = response.GetOptions();
 				EXPECT_THAT(responseOptions, ::testing::Contains(ContentFormat(contentFormat)));
-				EXPECT_EQ(0, response.GetPayload().size());
+				EXPECT_EQ(0ul, response.GetPayload().size());
 			}
 
 			TEST_F(ServerTest, ObserveRemoveRequestButEndpointIsNotObservable)
@@ -1442,7 +1431,7 @@ namespace Thing {
 
 				std::vector<Thing::CoAP::Option>& responseOptions = response.GetOptions();
 				EXPECT_THAT(responseOptions, ::testing::Contains(ContentFormat(contentFormat)));
-				EXPECT_EQ(0, response.GetPayload().size());
+				EXPECT_EQ(0ul, response.GetPayload().size());
 			}
 
 			TEST_F(ServerTest, ObserveRemoveAllSingleEndpointTest)
@@ -1486,7 +1475,7 @@ namespace Thing {
 				EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
 				EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
 				std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
-				EXPECT_EQ(3, responseOptions.size());
+				EXPECT_EQ(3ul, responseOptions.size());
 
 				EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpointPath.c_str(), endpointPath.size())));
 				EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
@@ -1550,7 +1539,7 @@ namespace Thing {
 					EXPECT_EQ(Thing::CoAP::MessageType::Confirmable, observePacket.GetType());
 					EXPECT_EQ(static_cast<int>(Thing::CoAP::ResponseCode::Content), static_cast<int>(observePacket.GetCode()));
 					std::vector<Thing::CoAP::Option>& responseOptions = observePacket.GetOptions();
-					EXPECT_EQ(3, responseOptions.size());
+					EXPECT_EQ(3ul, responseOptions.size());
 
 					EXPECT_THAT(responseOptions, Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint[i].GetName().c_str(), endpoint[i].GetName().size())));
 					EXPECT_THAT(responseOptions, Contains(ContentFormat(Thing::CoAP::ContentFormat::ApplicationJSon)));
@@ -1565,7 +1554,6 @@ namespace Thing {
 				for(int i = 0; i < totalResources; ++i)
 					Server.NotifyObservers(endpoint[i], Thing::CoAP::Status::Content(observePacketPayload));
 			}
- #pragma endregion
 		}
 	}
 }

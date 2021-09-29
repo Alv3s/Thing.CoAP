@@ -14,7 +14,7 @@ jobs:
     - name: autoreconf
       run: autoreconf -i
     - name: configure
-      run: ./configure CXXFLAGS=-Werror
+      run: ./configure CXXFLAGS="-Wall -Werror"
     - name: make
       run: make
     - name: make check

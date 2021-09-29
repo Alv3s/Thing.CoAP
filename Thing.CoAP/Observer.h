@@ -21,8 +21,12 @@ namespace Thing {
 
 			Observer& operator=(const Observer& other)
 			{
-				Observer o(other);
-				return o;
+				ip = other.ip;
+				port = other.port;
+				count = other.count;
+				tokens = other.tokens;
+				messageID = other.messageID;
+				return *this;
 			}
 
 			bool operator==(const Observer& other) const
@@ -30,11 +34,11 @@ namespace Thing {
 				return ip == other.ip && port == other.port;
 			}
 		private:
-			const IPAddress ip;
-			const int port;
-			const std::vector<uint8_t> tokens;
-			uint16_t count;
+			IPAddress ip;
+			int port;
 			uint16_t messageID;
+			std::vector<uint8_t> tokens;
+			uint16_t count;
 		};
 	}
 }

@@ -63,7 +63,11 @@ namespace Thing
 					this->hasMaximumSizeEstimate = true;
 				}
 				else if (type == "ct")
-					sscanf(value.c_str(), "%d", &this->contentFormat);
+				{
+				    int contentFormat = 0;
+					sscanf(value.c_str(), "%d", &contentFormat);
+					this->contentFormat = static_cast<ContentFormat>(contentFormat);
+				}
 				else if (type == "title")
 				{
 					this->title = value.substr(1, value.size() - 2); //Title is a string and we must remove the quotes.

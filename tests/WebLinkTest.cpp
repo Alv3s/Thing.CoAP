@@ -62,7 +62,7 @@ namespace Thing {
 			{
 				WebLink link(rawData);
 				ASSERT_TRUE(link.HasMaximumSizeEstimate());
-				ASSERT_EQ(10, link.GetMaximumSizeEstimate());
+				ASSERT_EQ(10ul, link.GetMaximumSizeEstimate());
 			}
 
 			TEST_F(WebLinkTest, MaximumSizeEstimateNotExistTest)
@@ -110,13 +110,13 @@ namespace Thing {
 			{
 				std::list<WebLink> links = WebLink::ParseString(rawData);
 
-				ASSERT_EQ(1, links.size());
+				ASSERT_EQ(1ul, links.size());
 
 				WebLink link = *links.begin();
 				ASSERT_EQ("test", link.GetURI());
 				ASSERT_EQ("observer", link.GetResourceType());
 				ASSERT_EQ("thing.coap", link.GetInterfaceDescription());
-				ASSERT_EQ(10, link.GetMaximumSizeEstimate());
+				ASSERT_EQ(10ul, link.GetMaximumSizeEstimate());
 				ASSERT_EQ(Thing::CoAP::ContentFormat::ApplicationJSon, link.GetContentFormat());
 				ASSERT_EQ(true, link.IsObservable());
 				ASSERT_EQ("Some Title", link.GetTitle());
