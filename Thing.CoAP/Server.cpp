@@ -56,7 +56,6 @@ namespace Thing {
 		{
 		}
 
-#pragma region Endpoint Management
 		IFunctionalResource& Server::CreateResource(std::string name, Thing::CoAP::ContentFormat content, bool IsObservable)
 		{
 			FunctionalResource* endpoint = new FunctionalResource(name, content, IsObservable);
@@ -87,7 +86,6 @@ namespace Thing {
 		{
 			RemoveResource(&endpoint);
 		}
-#pragma endregion
 
 		void Server::SetPort(int port)
 		{
@@ -162,6 +160,8 @@ namespace Thing {
 					{
 					case Thing::CoAP::MessageType::Confirmable: response.SetType(Thing::CoAP::MessageType::Acknowledge); break;
 					case Thing::CoAP::MessageType::NonConfirmable: response.SetType(Thing::CoAP::MessageType::NonConfirmable); break;
+					case Thing::CoAP::MessageType::Acknowledge: break;
+					case Thing::CoAP::MessageType::Reset: break;
 					}
 
 					std::map<std::string, AvailableResource>::iterator it = this->resources.find(url);
@@ -206,6 +206,9 @@ namespace Thing {
 						case Thing::CoAP::Method::Put: e = resource->Put(request); break;
 						case Thing::CoAP::Method::Post: e = resource->Post(request); break;
 						case Thing::CoAP::Method::Delete: e = resource->Delete(request); break;
+						case Thing::CoAP::Method::Content: break;
+						case Thing::CoAP::Method::NotFound: break;
+						case Thing::CoAP::Method::Empty: break;
 						}
 
 						std::string statusPayload = e.GetPayload();
@@ -268,7 +271,6 @@ namespace Thing {
 			SetPacketProvider(&provider);
 		}
 
-#pragma region Private Methods
 		void Server::removeObserver(std::string& url, Thing::CoAP::Observer & obs)
 		{
 			if (url.size() > 0)
@@ -348,6 +350,5 @@ namespace Thing {
 			option.SetNumber(Thing::CoAP::OptionValue::ContentFormat);
 			option.SetOption(optionBuffer, 2);
 		}
-#pragma endregion
 	}
 }

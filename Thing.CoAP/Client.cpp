@@ -106,7 +106,8 @@ namespace Thing
 		ObserveToken Client::Observe(std::string endpoint, ResponseCallback callback)
 		{
 			const uint16_t messageID = currentMessageId++;
-			uint8_t tokens[2] = { (messageID >> 8) & 0xFF, messageID & 0xFF };
+			uint8_t tokens[2] = { static_cast<uint8_t>((messageID >> 8) & 0xFF),
+			                      static_cast<uint8_t>(messageID & (uint8_t)0xFF) };
 
 			Thing::CoAP::Packet request;
 			request.SetVersion(1);
@@ -138,7 +139,7 @@ namespace Thing
 			const uint16_t messageID = currentMessageId++;
 			const uint16_t tokenID = token.GetToken();
 			std::string endpoint = token.GetEndpoint();
-			uint8_t tokens[2] = { (tokenID >> 8) & 0xFF, tokenID & 0xFF };
+			uint8_t tokens[2] = { static_cast<uint8_t>((tokenID >> 8) & 0xFF), static_cast<uint8_t>(tokenID & 0xFF) };
 
 			Thing::CoAP::Packet request;
 			request.SetVersion(1);
@@ -207,7 +208,7 @@ namespace Thing
 				return;
 
 			const uint16_t messageID = currentMessageId++;
-			uint8_t tokens[2] = { (messageID >> 8) & 0xFF, messageID & 0xFF };
+			uint8_t tokens[2] = { static_cast<uint8_t>((messageID >> 8) & 0xFF), static_cast<uint8_t>(messageID & 0xFF) };
 
 			Thing::CoAP::Packet request;
 			request.SetVersion(1);

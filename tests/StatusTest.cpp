@@ -31,7 +31,7 @@ namespace Thing {
 			{
 				Thing::CoAP::Status status = Thing::CoAP::Status::Content();
 
-				EXPECT_EQ(0, status.GetPayload().size());
+				EXPECT_EQ(0ul, status.GetPayload().size());
 				EXPECT_EQ(Thing::CoAP::ResponseCode::Content, status.GetCode());
 			}
 

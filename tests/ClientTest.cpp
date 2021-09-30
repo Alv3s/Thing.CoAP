@@ -62,7 +62,7 @@ namespace Thing {
 				EXPECT_EQ(Method::Get, request.GetCode());
 				EXPECT_EQ(Thing::CoAP::MessageType::NonConfirmable, request.GetType());
 				EXPECT_THAT(request.GetOptions(), Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint.c_str(), endpoint.size())));
-				ASSERT_EQ(0, request.GetPayload().size());
+				ASSERT_EQ(0ul, request.GetPayload().size());
 
 				//It's enough to return the same sent packet as fot his test, we only want to make sure the callback is called and for that, the sent token just need to match the incoming token
 				EXPECT_CALL(packetProviderMock, ReadPacket(_, _, _)).Times(1).WillOnce(DoAll(SetArgPointee<0>(networkPacket), Return(true)));
@@ -97,7 +97,7 @@ namespace Thing {
 				EXPECT_EQ(Method::Get, request.GetCode());
 				EXPECT_EQ(Thing::CoAP::MessageType::NonConfirmable, request.GetType());
 				EXPECT_THAT(request.GetOptions(), Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint.c_str(), endpoint.size())));
-				ASSERT_EQ(0, request.GetPayload().size());
+				ASSERT_EQ(0ul, request.GetPayload().size());
 
 				//It's enough to return the same sent packet as fot his test, we only want to make sure the callback is called and for that, the sent token just need to match the incoming token
 				EXPECT_CALL(packetProviderMock, ReadPacket(_, _, _)).Times(1).WillOnce(DoAll(SetArgPointee<0>(networkPacket), Return(true)));
@@ -428,14 +428,14 @@ namespace Thing {
 				request.DesserializePacket(networkPacket);
 
 				uint16_t tokenID = token.GetToken();
-				uint8_t tokens[2] = { (tokenID >> 8) & 0xFF, tokenID & 0xFF };
+				uint8_t tokens[2] = { static_cast<uint8_t>((tokenID >> 8) & 0xFF), static_cast<uint8_t>(tokenID & 0xFF) };
 				EXPECT_EQ(Method::Get, request.GetCode());
-				EXPECT_EQ(2, request.GetTokens().size());
+				EXPECT_EQ(2ul, request.GetTokens().size());
 				EXPECT_TRUE(0 == std::memcmp(&tokens[0], &request.GetTokens()[0], 2));
 				EXPECT_EQ(Thing::CoAP::MessageType::NonConfirmable, request.GetType());
 				EXPECT_THAT(request.GetOptions(), Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint.c_str(), endpoint.size())));
 				EXPECT_THAT(request.GetOptions(), Contains(Option(Thing::CoAP::OptionValue::Observe, (uint8_t*)NULL, 0)));
-				ASSERT_EQ(0, request.GetPayload().size());
+				ASSERT_EQ(0ul, request.GetPayload().size());
 
 				//It's enough to return the same sent packet as fot his test, we only want to make sure the callback is called and for that, the sent token just need to match the incoming token
 				EXPECT_CALL(packetProviderMock, ReadPacket(_, _, _)).Times(1).WillOnce(DoAll(SetArgPointee<0>(networkPacket), Return(true)));
@@ -475,7 +475,7 @@ namespace Thing {
 				EXPECT_EQ(Thing::CoAP::MessageType::NonConfirmable, request.GetType());
 				EXPECT_THAT(request.GetOptions(), Contains(Option(Thing::CoAP::OptionValue::URIPath, (uint8_t*)endpoint.c_str(), endpoint.size())));
 				EXPECT_THAT(request.GetOptions(), Contains(Option(Thing::CoAP::OptionValue::Observe, (uint8_t*)&observeOption, 1)));
-				ASSERT_EQ(0, request.GetPayload().size());
+				ASSERT_EQ(0ul, request.GetPayload().size());
 			}
 		}
 	}
