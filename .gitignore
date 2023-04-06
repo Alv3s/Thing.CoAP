@@ -401,3 +401,7 @@ Makefile
 
 build-aux
 /libtool
+
+**.o
+**.lo
+**.la
