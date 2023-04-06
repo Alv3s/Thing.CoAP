@@ -1,4 +1,5 @@
 #include "Option.h"
+#include <cstddef>
 
 namespace Thing {
 	namespace CoAP
