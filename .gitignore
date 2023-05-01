@@ -405,3 +405,8 @@ build-aux
 **.o
 **.lo
 **.la
+
+.libs
+examples/Client
+examples/Client-Discovery
+examples/Server-InlineEndpoints
