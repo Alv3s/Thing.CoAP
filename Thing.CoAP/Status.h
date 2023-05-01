@@ -3,7 +3,8 @@
 #include <string>
 #include "ResponseCode.h"
 
-namespace Thing {
+namespace Thing
+{
 	namespace CoAP
 	{
 		class Status
@@ -12,46 +13,50 @@ namespace Thing {
 			Status(const Status &t);
 			virtual ~Status();
 
-			std::string GetPayload() const;
+			uint8_t *GetPayload() const;
+			size_t GetPayloadLength() const;
 			Thing::CoAP::ResponseCode GetCode() const;
 
-			static Thing::CoAP::Status Content(std::string payload);
+			static Thing::CoAP::Status Content(uint8_t *data, size_t data_length);
 			static Thing::CoAP::Status Content();
 			static Thing::CoAP::Status BadRequest();
 			static Thing::CoAP::Status MethodNotAllowed();
 			static Thing::CoAP::Status InternalServerError();
 			static Thing::CoAP::Status PreconditionFailed();
 			static Thing::CoAP::Status RequestEntityTooLarge();
-			static Thing::CoAP::Status Created(std::string payload);
+			static Thing::CoAP::Status Created(uint8_t *data, size_t data_length);
 			static Thing::CoAP::Status Deleted();
 			static Thing::CoAP::Status Valid();
 			static Thing::CoAP::Status NotFound();
 			static Thing::CoAP::Status NotImplemented();
 
-			Status& operator=(const Status& other)
+			Status &operator=(const Status &other)
 			{
 				if (&other == this)
 					return *this;
 
-				this->payload = other.payload;
+				this->data = other.data;
+				this->data_length = other.data_length;
 				this->code = other.code;
 				return *this;
 			}
 
-			bool operator==(const Status& other) const
+			bool operator==(const Status &other) const
 			{
-				return this->code == other.code && this->payload == other.payload;
+				return this->code == other.code && this->data == other.data && this->data_length == other.data_length;
 			}
 
-			bool operator!=(const Status& other) const
+			bool operator!=(const Status &other) const
 			{
 				return !(*this == other);
 			}
+
 		private:
-			Status(std::string payload, Thing::CoAP::ResponseCode code);
+			Status(uint8_t *data, size_t data_length, Thing::CoAP::ResponseCode code);
 			Status(Thing::CoAP::ResponseCode code);
 
-			std::string payload;
+			uint8_t *data;
+			size_t data_length;
 			Thing::CoAP::ResponseCode code;
 		};
 	}

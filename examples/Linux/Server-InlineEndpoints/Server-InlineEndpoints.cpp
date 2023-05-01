@@ -21,14 +21,22 @@ int main(int argc, char **argv)
 			std::string received(payload.begin(), payload.end());
 			std::cout << "Client sent: " << received << std::endl;
 
-			return Thing::CoAP::Status::Content("Hello World!");
+			std::string string_data = "Hello world!";
+			uint8_t* data = (uint8_t*)string_data.c_str();
+			size_t data_length = string_data.length()+1;
+
+			return Thing::CoAP::Status::Content(data, data_length);
 		}).OnPost([](Thing::CoAP::Request& request) {
 			std::vector<uint8_t> payload = request.GetPayload();
 
 			std::string received(payload.begin(), payload.end());
 			std::cout << "Client sent: " << received << std::endl;
 
-			return Thing::CoAP::Status::Content("Hello From The Server! The message you sent was:" + received);
+			std::string string_data = "Hello From The Server! The message you sent was:" + received;
+			uint8_t* data = (uint8_t*)string_data.c_str();
+			size_t data_length = string_data.length()+1;
+
+			return Thing::CoAP::Status::Content(data, data_length);
 		});
 
 		server.Start();
@@ -37,7 +45,12 @@ int main(int argc, char **argv)
 			for (;;)
 			{
 				int randomSleep = rand() % 5000 + 1000;
-				endpoint->ObservableChanged(Thing::CoAP::Status::Content("Hello Clients! Next message is going to be sent in " + std::to_string(randomSleep) + "ms"));
+
+				std::string string_data = "Hello Clients! Next message is going to be sent in " + std::to_string(randomSleep) + "ms";
+				uint8_t* data = (uint8_t*)string_data.c_str();
+				size_t data_length = string_data.length()+1;
+
+				endpoint->ObservableChanged(Thing::CoAP::Status::Content(data, data_length));
 				usleep(randomSleep * 1000);
 			}
 		});

@@ -1,30 +1,38 @@
 #include "Status.h"
 
-namespace Thing {
+namespace Thing
+{
 	namespace CoAP
 	{
 
+		Status::Status(uint8_t *data, size_t data_length, Thing::CoAP::ResponseCode code) : data(data), data_length(data_length), code(code) {}
+
+		/*
 		Status::Status(std::string payload, Thing::CoAP::ResponseCode code) : payload(payload), code(code)
 		{
 		}
+		*/
 
-		Status::Status(Thing::CoAP::ResponseCode code) : payload(""), code(code)
+		Status::Status(Thing::CoAP::ResponseCode code) : data(NULL), data_length(0), code(code)
 		{
-
 		}
 
-		Status::Status(const Status &t) : payload(t.payload), code(t.code)
+		Status::Status(const Status &t) : data(t.data), data_length(t.data_length), code(t.code)
 		{
-			
 		}
 
 		Status::~Status()
 		{
 		}
 
-		std::string Status::GetPayload() const
+		uint8_t *Status::GetPayload() const
 		{
-			return payload;
+			return data;
+		}
+
+		size_t Status::GetPayloadLength() const
+		{
+			return data_length;
 		}
 
 		Thing::CoAP::ResponseCode Status::GetCode() const
@@ -32,9 +40,9 @@ namespace Thing {
 			return code;
 		}
 
-		Status Status::Content(std::string payload)
+		Status Status::Content(uint8_t *data, size_t data_length)
 		{
-			return Status(payload, Thing::CoAP::ResponseCode::Content);
+			return Status(data, data_length, Thing::CoAP::ResponseCode::Content);
 		}
 
 		Thing::CoAP::Status Status::Content()
@@ -67,9 +75,9 @@ namespace Thing {
 			return Status(Thing::CoAP::ResponseCode::RequestEntityTooLarge);
 		}
 
-		Status Status::Created(std::string payload)
+		Status Status::Created(uint8_t *data, size_t data_length)
 		{
-			return Status(payload, Thing::CoAP::ResponseCode::Created);
+			return Status(data, data_length, Thing::CoAP::ResponseCode::Created);
 		}
 
 		Status Status::Deleted()
