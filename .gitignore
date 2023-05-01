@@ -412,3 +412,7 @@ examples/Client-Discovery
 examples/Server-InlineEndpoints
 
 Thing.CoAP/.libs
+
+examples/Linux/Client-Discovery/.dirstamp
+examples/Linux/Client/.dirstamp
+examples/Linux/Server-InlineEndpoints/.dirstamp
