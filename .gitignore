@@ -410,3 +410,5 @@ build-aux
 examples/Client
 examples/Client-Discovery
 examples/Server-InlineEndpoints
+
+Thing.CoAP/.libs
