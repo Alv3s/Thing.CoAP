@@ -116,7 +116,7 @@ namespace Thing
 			Server::Process(NULL);
 		}
 
-		void Server::Process(void (*onMethodCode)(Thing::CoAP::Method))
+		void Server::Process(void (*onMethodCode)(Thing::CoAP::Method, Thing::CoAP::MessageType))
 		{
 			if (!packetProvider)
 				return;
@@ -131,7 +131,7 @@ namespace Thing
 
 				if (onMethodCode != NULL)
 				{
-					onMethodCode(request.GetCode());
+					onMethodCode(request.GetCode(), request.GetType());
 				}
 
 				// call endpoint url function

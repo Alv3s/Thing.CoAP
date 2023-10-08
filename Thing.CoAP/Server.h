@@ -31,7 +31,7 @@ namespace Thing
 			void Start() override;
 			void Stop() override;
 			void Process() override;
-			void Process(void (*onMethodCode)(Thing::CoAP::Method)) override;
+			void Process(void (*onMethodCode)(Thing::CoAP::Method, Thing::CoAP::MessageType)) override;
 
 			void NotifyObservers(Thing::CoAP::IResource *endpoint, Thing::CoAP::Status r) override;
 			void NotifyObservers(Thing::CoAP::IResource &endpoint, Thing::CoAP::Status r) override;
