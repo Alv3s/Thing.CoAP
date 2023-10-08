@@ -129,11 +129,6 @@ namespace Thing
 				Thing::CoAP::Request request;
 				request.DesserializePacket(buffer);
 
-				if (onMethodCode != NULL)
-				{
-					onMethodCode(request.GetCode(), request.GetType());
-				}
-
 				// call endpoint url function
 				std::string url = "";
 				std::vector<Thing::CoAP::Option> &options = request.GetOptions();
@@ -151,6 +146,12 @@ namespace Thing
 				response.SetVersion(request.GetVersion());
 				response.SetTokens(request.GetTokens());
 				response.SetMessageID(request.GetMessageID());
+
+				if (onMethodCode != NULL)
+				{
+					onMethodCode(request.GetCode(), request.GetType());
+				}
+
 				switch (request.GetCode())
 				{
 				case Thing::CoAP::Method::Empty:
