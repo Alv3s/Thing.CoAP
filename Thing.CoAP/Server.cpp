@@ -121,7 +121,6 @@ namespace Thing
 			std::vector<uint8_t> buffer;
 			if (packetProvider->ReadPacket(&buffer, &address, &port))
 			{
-				printf("processing request\n");
 				Thing::CoAP::Request request;
 				request.DesserializePacket(buffer);
 
@@ -153,7 +152,6 @@ namespace Thing
 						response.SetCode(Thing::CoAP::Method::Empty);
 						response.SetPayload(NULL, 0);
 
-						printf("processing reset\n");
 						std::vector<uint8_t> payload = response.SerializePacket();
 						packetProvider->SendPacket(payload, address, port);
 					}
