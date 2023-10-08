@@ -113,11 +113,6 @@ namespace Thing
 
 		void Server::Process()
 		{
-			Server::Process(NULL);
-		}
-
-		void Server::Process(void (*onMethodCode)(Thing::CoAP::Method, Thing::CoAP::MessageType))
-		{
 			if (!packetProvider)
 				return;
 
@@ -126,7 +121,7 @@ namespace Thing
 			std::vector<uint8_t> buffer;
 			if (packetProvider->ReadPacket(&buffer, &address, &port))
 			{
-				printf("processing request");
+				printf("processing request/n");
 				Thing::CoAP::Request request;
 				request.DesserializePacket(buffer);
 
@@ -157,10 +152,7 @@ namespace Thing
 						response.SetCode(Thing::CoAP::Method::Empty);
 						response.SetPayload(NULL, 0);
 
-						if (onMethodCode != NULL)
-						{
-							onMethodCode(request.GetCode(), request.GetType());
-						}
+						printf("processing reset/n");
 					}
 					else if (request.GetType() == Thing::CoAP::MessageType::Reset)
 					{
