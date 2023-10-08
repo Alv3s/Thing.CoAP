@@ -121,6 +121,7 @@ namespace Thing
 			if (!packetProvider)
 				return;
 
+			printf("processing request");
 			IPAddress address;
 			int port = 0;
 			std::vector<uint8_t> buffer;
@@ -147,11 +148,6 @@ namespace Thing
 				response.SetTokens(request.GetTokens());
 				response.SetMessageID(request.GetMessageID());
 
-				if (onMethodCode != NULL)
-				{
-					onMethodCode(request.GetCode(), request.GetType());
-				}
-
 				switch (request.GetCode())
 				{
 				case Thing::CoAP::Method::Empty:
@@ -160,6 +156,11 @@ namespace Thing
 						response.SetType(Thing::CoAP::MessageType::Reset);
 						response.SetCode(Thing::CoAP::Method::Empty);
 						response.SetPayload(NULL, 0);
+
+						if (onMethodCode != NULL)
+						{
+							onMethodCode(request.GetCode(), request.GetType());
+						}
 					}
 					else if (request.GetType() == Thing::CoAP::MessageType::Reset)
 					{
