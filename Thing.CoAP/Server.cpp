@@ -148,6 +148,7 @@ namespace Thing
 				case Thing::CoAP::Method::Empty:
 					if (request.GetType() == Thing::CoAP::MessageType::Confirmable)
 					{
+						response.SetTokens({});
 						response.SetType(Thing::CoAP::MessageType::Reset);
 						response.SetCode(Thing::CoAP::Method::Empty);
 						response.SetPayload(NULL, 0);
