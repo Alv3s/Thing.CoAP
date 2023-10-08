@@ -121,12 +121,12 @@ namespace Thing
 			if (!packetProvider)
 				return;
 
-			printf("processing request");
 			IPAddress address;
 			int port = 0;
 			std::vector<uint8_t> buffer;
 			if (packetProvider->ReadPacket(&buffer, &address, &port))
 			{
+				printf("processing request");
 				Thing::CoAP::Request request;
 				request.DesserializePacket(buffer);
 
