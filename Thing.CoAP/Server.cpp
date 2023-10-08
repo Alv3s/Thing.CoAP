@@ -113,6 +113,11 @@ namespace Thing
 
 		void Server::Process()
 		{
+			Server::Process(NULL);
+		}
+
+		void Server::Process(void (*onMethodCode)(Thing::CoAP::Method))
+		{
 			if (!packetProvider)
 				return;
 
@@ -123,6 +128,11 @@ namespace Thing
 			{
 				Thing::CoAP::Request request;
 				request.DesserializePacket(buffer);
+
+				if (onMethodCode != NULL)
+				{
+					onMethodCode(request.GetCode());
+				}
 
 				// call endpoint url function
 				std::string url = "";

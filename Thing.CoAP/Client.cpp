@@ -5,16 +5,15 @@ namespace Thing
 	namespace CoAP
 	{
 		Client::Client() : packetProvider(NULL),
-			currentMessageId(1),
-			peerIP(),
-			peerPort(),
-			port(5682)
+						   currentMessageId(1),
+						   peerIP(),
+						   peerPort(),
+						   port(5682)
 		{
 		}
 
 		Client::~Client()
 		{
-
 		}
 
 		void Client::SetPort(int port)
@@ -42,13 +41,12 @@ namespace Thing
 				packetProvider->Stop();
 		}
 
-
-		void Client::SetPacketProvider(IPacketProvider* packetProvider)
+		void Client::SetPacketProvider(IPacketProvider *packetProvider)
 		{
 			this->packetProvider = packetProvider;
 		}
 
-		void Client::SetPacketProvider(IPacketProvider& packetProvider)
+		void Client::SetPacketProvider(IPacketProvider &packetProvider)
 		{
 			SetPacketProvider(&packetProvider);
 		}
@@ -106,7 +104,7 @@ namespace Thing
 		ObserveToken Client::Observe(std::string endpoint, ResponseCallback callback)
 		{
 			const uint16_t messageID = currentMessageId++;
-			uint8_t tokens[2] = { (messageID >> 8) & 0xFF, messageID & 0xFF };
+			uint8_t tokens[2] = {static_cast<uint8_t>((messageID >> 8) & 0xFF), static_cast<uint8_t>(messageID & 0xFF)};
 
 			Thing::CoAP::Packet request;
 			request.SetVersion(1);
@@ -119,7 +117,7 @@ namespace Thing
 			options.push_back(observeOption);
 			Thing::CoAP::Option urlPath;
 			urlPath.SetNumber(Thing::CoAP::OptionValue::URIPath);
-			urlPath.SetOption((uint8_t*)endpoint.c_str(), endpoint.size());
+			urlPath.SetOption((uint8_t *)endpoint.c_str(), endpoint.size());
 			options.push_back(urlPath);
 			request.SetOptions(options);
 			request.SetCode(Thing::CoAP::Method::Get);
@@ -138,7 +136,7 @@ namespace Thing
 			const uint16_t messageID = currentMessageId++;
 			const uint16_t tokenID = token.GetToken();
 			std::string endpoint = token.GetEndpoint();
-			uint8_t tokens[2] = { (tokenID >> 8) & 0xFF, tokenID & 0xFF };
+			uint8_t tokens[2] = {static_cast<uint8_t>((tokenID >> 8) & 0xFF), static_cast<uint8_t>(tokenID & 0xFF)};
 
 			Thing::CoAP::Packet request;
 			request.SetVersion(1);
@@ -148,12 +146,12 @@ namespace Thing
 			std::vector<Thing::CoAP::Option> options;
 			Thing::CoAP::Option observeOption;
 			observeOption.SetNumber(Thing::CoAP::OptionValue::Observe);
-			uint8_t buffer[] = { 1 };
+			uint8_t buffer[] = {1};
 			observeOption.SetOption(buffer, sizeof(buffer));
 			options.push_back(observeOption);
 			Thing::CoAP::Option urlPath;
 			urlPath.SetNumber(Thing::CoAP::OptionValue::URIPath);
-			urlPath.SetOption((uint8_t*)endpoint.c_str(), endpoint.size());
+			urlPath.SetOption((uint8_t *)endpoint.c_str(), endpoint.size());
 			options.push_back(urlPath);
 			request.SetOptions(options);
 			request.SetCode(Thing::CoAP::Method::Get);
@@ -207,7 +205,7 @@ namespace Thing
 				return;
 
 			const uint16_t messageID = currentMessageId++;
-			uint8_t tokens[2] = { (messageID >> 8) & 0xFF, messageID & 0xFF };
+			uint8_t tokens[2] = {static_cast<uint8_t>((messageID >> 8) & 0xFF), static_cast<uint8_t>(messageID & 0xFF)};
 
 			Thing::CoAP::Packet request;
 			request.SetVersion(1);
@@ -217,7 +215,7 @@ namespace Thing
 			std::vector<Thing::CoAP::Option> options;
 			Thing::CoAP::Option urlPath;
 			urlPath.SetNumber(Thing::CoAP::OptionValue::URIPath);
-			urlPath.SetOption((uint8_t*)endpoint.c_str(), endpoint.size());
+			urlPath.SetOption((uint8_t *)endpoint.c_str(), endpoint.size());
 			options.push_back(urlPath);
 			request.SetOptions(options);
 			request.SetCode(method);
@@ -232,7 +230,7 @@ namespace Thing
 
 		void Client::Request(std::string endpoint, Method method, std::string payload, ResponseCallback callback)
 		{
-			std::vector<uint8_t> bytes((uint8_t*)payload.c_str(), (uint8_t*)payload.c_str() + payload.size());
+			std::vector<uint8_t> bytes((uint8_t *)payload.c_str(), (uint8_t *)payload.c_str() + payload.size());
 			Request(endpoint, method, bytes, callback);
 		}
 	}

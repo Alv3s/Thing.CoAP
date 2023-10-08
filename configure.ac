@@ -1,5 +1,5 @@
-AC_PREREQ([2.69])
-AC_INIT(libthingcoap, 1.0)
+AC_PREREQ([2.71])
+AC_INIT([libthingcoap],[1.0])
 
 AC_CONFIG_AUX_DIR([build-aux])
 
@@ -12,4 +12,5 @@ AM_PROG_AR
 LT_INIT
 AC_CONFIG_MACRO_DIRS([m4])
 
-AC_OUTPUT(Makefile Thing.CoAP/Makefile tests/Makefile examples/Makefile)
+AC_CONFIG_FILES([Makefile Thing.CoAP/Makefile tests/Makefile examples/Makefile])
+AC_OUTPUT
